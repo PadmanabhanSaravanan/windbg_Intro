@@ -3,8 +3,9 @@
 **Table of Content**
 
 * [**Help command**](#help-command)
-* [**!analyze -v command**](#!analyze-v-and-stack-commands)
+* [**!analyze -v command**](#!analyze-v-command)
 * [**Sympath command**](#sympath-command)
+* [**Setting symbol path**](#setting-symbol-path)
 * [**Debugger extensions**](#debugger-extensions)
 * [**x command**](#x-command)
 * [**ln command**](#ln-command)
@@ -125,6 +126,40 @@ The sympath command in WinDbg is used to display or set the symbol file path for
 3. **again check symbol path it will be set to c:/temp**
 
 ![Windbg-Intro](image/img16.PNG)
+
+## **Setting symbol path**
+
+* Open a execuatble file, file -> launch executable -> select the .exe file -> open.
+
+![Windbg-Intro](image/img5.PNG)
+
+* `lm` command -> loaded modules, if we check the module has a pdb symbol and the symbol is present in this particular path.
+
+![Windbg-Intro](image/img6.PNG)
+
+* take a copy **.pdb** file and save it for further reference
+
+* next we will **delete .pdb file** from the project and **delete the cache** from the mentioned module path. i.e., **C:\ProgramData\Dbg\sym\HelloWorld.pdb\09F43444E582442E929DEDF81F87033D6\HelloWorld.pdb**
+
+* now check the modules the symbol folder will not be loaded.
+
+![Windbg-Intro](image/img50.PNG)
+
+* To load the symbol file,create new folder in project named cssym(custom symbol path).
+
+![Windbg-Intro](image/img49.PNG)
+
+* paste the .pdb file in cssym folder ,which was copied before.
+
+![Windbg-Intro](image/img51.PNG)
+
+* copy the file path were .pdb file is pasted and load the sympath and use lm command to check symbols are loaded.
+
+```markdown
+.sympath srv*;D:\StudentRequest_ForDren\WindbgIntro\HelloWorld\cssym
+```
+
+![Windbg-Intro](image/img52.PNG)
 
 ## **Debugger extensions**
 
