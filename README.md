@@ -24,6 +24,7 @@
 * [**wt command**](#wt-command)
 * [**.logopen command**](#t,p,.logopen-command)
 * [**ChildEBP,retAddr,argstochild**](#childebp,retaddr,argstochild)
+* [**Address Range**](#address-range)
 
 ## **Help command**
 
@@ -549,3 +550,31 @@ While looking at call stack we will these three values i.e., **ChildEBP , retAdd
 
 * argstochild typically refers to the arguments that are passed from a parent function to a child function in a function call.
 * When a function is called in a program, the arguments to the function are typically pushed onto the stack, in reverse order (from last to first). These become the argstochild for the function being called (the child function).
+
+## **Address Range**
+
+The term "Address Range" generally refers to a contiguous block of addresses in memory, specified by a starting address and an ending address.
+
+In the context of programming or debugging, an address range could be used to represent various things, such as:
+
+* The range of addresses occupied by a function or a block of code.
+* The range of addresses allocated for a buffer or an array.
+* The range of addresses covered by a memory mapping.
+
+**!teb** - this is a command to get the stack base and stack limit, so this is a property of the thread.
+
+```markdown
+!teb
+```
+
+![Windbg-Intro](image/img54.PNG)
+
+we can check difference between stack base and stack limit
+
+```markdown
+?stackbase-stacklimit
+```
+
+![Windbg-Intro](image/img55.PNG)
+
+I got 12288, this many bytes is the difference between these two addresses.
