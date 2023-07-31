@@ -1,4 +1,0 @@
-C:\OneDrive\Docs\Consulting\Philips\Projects\Crash\ManagedHeapCurruption\ManagedHeapCurruption\bin\Debug\ManagedHeapCurruption.exe
-C:\OneDrive\Docs\Consulting\Philips\Projects\Crash\ManagedHeapCurruption\ManagedHeapCurruption\bin\Debug\ManagedHeapCurruption.pdb
-C:\OneDrive\Docs\Consulting\Philips\Projects\Crash\ManagedHeapCurruption\ManagedHeapCurruption\obj\x86\Debug\ManagedHeapCurruption.exe
-C:\OneDrive\Docs\Consulting\Philips\Projects\Crash\ManagedHeapCurruption\ManagedHeapCurruption\obj\x86\Debug\ManagedHeapCurruption.pdb

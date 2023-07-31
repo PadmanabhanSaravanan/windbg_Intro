@@ -1,7 +1,0 @@
-﻿  stdafx.cpp
-  HandleLeaks.cpp
-  Generating code
-  Previous IPDB not found, fall back to full compilation.
-  All 31 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  HandleLeaks.vcxproj -> C:\Users\Admin\Downloads\Materials-20211027T224724Z-001\Materials\UserMode\Leaks\HandleLeaks\Release\HandleLeaks.exe
