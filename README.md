@@ -409,6 +409,8 @@ The dps command in WinDbg is used to display memory, interpret data as both symb
 
 ## **dt command**
 
+
+
 The dt command in WinDbg is used to display type information, which includes the structure of data types and the values of variables or data structures. This command is especially useful for inspecting complex data types like structures, unions, classes, and so on.
 
 ![Windbg-Intro](image/img38.PNG)
@@ -416,6 +418,8 @@ The dt command in WinDbg is used to display type information, which includes the
 ![Windbg-Intro](image/img39.PNG)
 
 ## **dv command**
+
+
 
 The dv command in WinDbg is used to display local variables and their values for the current function in the call stack.
 
