@@ -117,7 +117,7 @@ The sympath command in WinDbg is used to display or set the symbol file path for
 * `.sympath "C:/temp"`
 
 ```markdown
-.sympath "C:/temp
+.sympath "C:/temp"
 ```
 
 ![Windbg-Intro](image/img15.PNG)
