@@ -26,6 +26,7 @@
 * [**ChildEBP,retAddr,argstochild**](#childebp,retaddr,argstochild)
 * [**Address Range**](#address-range)
 * [**pipe command**](#pipe-command)
+* [**version,vertarget commands**](#version,vertarget-commands)
 
 ## **Help command**
 
@@ -599,3 +600,21 @@ I got 12288, this many bytes is the difference between these two addresses.
 ```
 
 ![Windbg-Intro](image/img57.PNG)
+
+## **version,vertarget commands**
+
+The **version** command in WinDbg provides information about the version of the debugging tools being used, as well as the version of the target being debugged.
+
+```markdown
+version
+```
+
+![Windbg-Intro](image/img58.PNG)
+
+The **vertarget** command in WinDbg provides information about the target system being debugged.
+
+```markdown
+vertarget
+```
+
+![Windbg-Intro](image/img59.PNG)
