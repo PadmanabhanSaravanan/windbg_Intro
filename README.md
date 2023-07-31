@@ -23,6 +23,7 @@
 * [**gu command**](#gu-command)
 * [**wt command**](#wt-command)
 * [**.logopen command**](#t,p,.logopen-command)
+* [**ChildEBP,retAddr,argstochild**](#childebp,retaddr,argstochild)
 
 ## **Help command**
 
@@ -526,3 +527,25 @@ use .logclose command to close the file
 ![Windbg-Intro](image/img46.PNG)
 
 ![Windbg-Intro](image/img47.PNG)
+
+## **ChildEBP,retAddr,argstochild**
+
+While looking at call stack we will these three values i.e., **ChildEBP , retAddr and argstochild**.
+
+![Windbg-Intro](image/img53.PNG)
+
+**ChildEBP**
+
+* ChildEBP is nothing but the saved ebp, with this we can get a lot of information,all the stack frame is accessed using the ebp, that is the ChildEBP.
+* EBP is a register in the x86 architecture which stands for "Extended Base Pointer". This register is typically used to hold the base address of the current stack frame.
+* When a function is called in a program, a new stack frame is created to hold the function's local variables and some other information. The EBP register is set to point to the base of this stack frame, which allows the function to correctly reference its local variables and arguments.
+
+**retAddr**
+
+* retAddr, short for "Return Address", typically refers to the memory address to which a function is supposed to return control after it finishes executing.
+* When a function is called in a program, the address of the instruction immediately following the call is pushed onto the stack. This is the return address. After the function completes, it pops this address off the stack and jumps to it, thereby returning control to the point in the code where it was called.
+
+**argstochild**
+
+* argstochild typically refers to the arguments that are passed from a parent function to a child function in a function call.
+* When a function is called in a program, the arguments to the function are typically pushed onto the stack, in reverse order (from last to first). These become the argstochild for the function being called (the child function).
