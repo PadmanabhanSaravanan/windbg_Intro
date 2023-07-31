@@ -25,6 +25,7 @@
 * [**.logopen command**](#t,p,.logopen-command)
 * [**ChildEBP,retAddr,argstochild**](#childebp,retaddr,argstochild)
 * [**Address Range**](#address-range)
+* [**pipe command**](#pipe-command)
 
 ## **Help command**
 
@@ -578,3 +579,23 @@ we can check difference between stack base and stack limit
 ![Windbg-Intro](image/img55.PNG)
 
 I got 12288, this many bytes is the difference between these two addresses.
+
+## **pipe command**
+
+* pipe command will show you information about the debuggee.
+
+```markdown
+|
+```
+
+![Windbg-Intro](image/img56.PNG)
+
+* this is the binary which is being debugged.
+
+* double pipe command gives mode of debugging.
+
+```markdown
+||
+```
+
+![Windbg-Intro](image/img57.PNG)
