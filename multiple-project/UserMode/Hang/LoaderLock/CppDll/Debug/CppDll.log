@@ -1,0 +1,10 @@
+﻿  pch.cpp
+  CppDll.cpp
+D:\Materials-20211027T224724Z-001\Materials\UserMode\Hang\LoaderLock\CppDll\CppDll.cpp(47,26): warning C4477: 'swscanf_s' : format string '%X' requires an argument of type 'unsigned int *', but variadic argument 1 has type 'HANDLE **'
+D:\Materials-20211027T224724Z-001\Materials\UserMode\Hang\LoaderLock\CppDll\CppDll.cpp(47,47): warning C4474: 'swscanf_s' : too many arguments passed for format string
+D:\Materials-20211027T224724Z-001\Materials\UserMode\Hang\LoaderLock\CppDll\CppDll.cpp(47,47): message : placeholders and their parameters expect 1 variadic arguments, but 2 were provided
+  dllmain.cpp
+  ReadConfig.cpp
+  Generating Code...
+     Creating library D:\Materials-20211027T224724Z-001\Materials\UserMode\Hang\LoaderLock\Debug\CPPDLL.lib and object D:\Materials-20211027T224724Z-001\Materials\UserMode\Hang\LoaderLock\Debug\CPPDLL.exp
+  CppDll.vcxproj -> D:\Materials-20211027T224724Z-001\Materials\UserMode\Hang\LoaderLock\Debug\CPPDLL.dll

@@ -1,0 +1,4 @@
+﻿  stdafx.cpp
+  kCmd.cpp
+D:\StudentRequest_ForDren\WindbgIntro\Structdt\kCmd\kCmd.cpp(20,12): warning C4305: '=': truncation from 'double' to 'float'
+  kCmd.vcxproj -> D:\StudentRequest_ForDren\WindbgIntro\Structdt\Debug\kCmd.exe

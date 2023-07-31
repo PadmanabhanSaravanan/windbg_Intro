@@ -1,0 +1,5 @@
+﻿  CppFromWindbg.cpp
+D:\Materials-20211027T224724Z-001\Materials\UserMode\Hang\LoaderLock\CppFromWindbg.cpp(312,10): warning C4101: 'fFreeResult': unreferenced local variable
+D:\Materials-20211027T224724Z-001\Materials\UserMode\Hang\LoaderLock\CppFromWindbg.cpp(284,11): warning C4101: 'dwWaitResult': unreferenced local variable
+D:\Materials-20211027T224724Z-001\Materials\UserMode\Hang\LoaderLock\CppFromWindbg.cpp(356,10): warning C4101: 'fFreeResult': unreferenced local variable
+LINK : fatal error LNK1104: cannot open file 'C:\Trainings\Windbg\Resources\Projects\UserMode\Misc\CppFromWindbg\Debug\CPPDLL.lib'

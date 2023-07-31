@@ -1,0 +1,8 @@
+﻿  Building 'sioctl' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  Issues.c
+  sioctl.vcxproj -> C:\Trainings\Windbg\Resources\drvsrc\src\general\ioctl\wdm\sys\Debug\sioctl.sys
+  Done Adding Additional Store
+  Successfully signed: C:\Trainings\Windbg\Resources\drvsrc\src\general\ioctl\wdm\sys\Debug\sioctl.sys
+  
+  Inf2Cat task was skipped as there were no inf files to process
+  
