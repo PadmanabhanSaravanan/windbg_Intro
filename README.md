@@ -152,6 +152,16 @@ Debugger extensions in WinDbg are powerful tools that can extend the basic capab
 
 ![Windbg-Intro](image/img18.PNG)
 
+**.unload command**
+
+The .unload command in WinDbg is used to unload a debugger extension DLL.
+
+```markdown
+.unload C:\Windows\Microsoft.NET\Framework\v4.0.30319\SOS.dl
+```
+
+![Windbg-Intro](image/img48.PNG)
+
 ## **x command**
 
 * The x command is used to display symbols that match a specific pattern. 
