@@ -238,7 +238,7 @@ attach dump
 
 ![Windbg-Intro](image/img52.PNG)
 
-Example:
+**Example:**
 
 ```text
 open executable:
@@ -311,6 +311,8 @@ open executable:
 
 Debugger extensions in WinDbg are powerful tools that can extend the basic capabilities of the debugger. They provide additional commands and utilities for specific debugging tasks.
 
+Extensions are plugins to the Debugger, so they add functionality to the Debugger or the base functionality is extended using the Extension commands.
+
 **.chain command**
 
 * The `.chain` command in WinDbg displays the list of all loaded debugger extensions. When you issue this command, WinDbg will show you a list of all debugger extensions that have been loaded into the current debugging session, including their load addresses and versions.
@@ -342,6 +344,41 @@ The .unload command in WinDbg is used to unload a debugger extension DLL.
 ```
 
 ![Windbg-Intro](image/img48.PNG)
+
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > .chain
+        current extensions loaded
+
+    > .load C:\Windows\Microsoft.NET\Framework\v4.0.30319\SOS.dll
+        - C:\Windows\Microsoft.NET\Framework\v4.0.30319\SOS.dll - .NET installation path
+
+    > .chain 
+        we can see the .NET extension loaded
+
+    > !help 
+        it will show you the latest loaded extensions
+
+    > !sos.help
+        it will also show the extension details
+
+    > .extmatch /D /e dbghelp *
+        These are the different commands which are available in the debug Help extension
+        - in the list of loaded extensions, click on the extension you can see the different commands which are available.
+    
+    > .unload C:\Windows\Microsoft.NET\Framework\v4.0.30319\SOS.dl
+        unload the extension
+
+    > .chain
+        to check whether extension is unloaded.
+
+    > qd 
+        detach the executable.
+```
 
 ## **x command**
 
