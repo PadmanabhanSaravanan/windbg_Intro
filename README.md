@@ -1048,6 +1048,28 @@ t
 
 ![Windbg-Intro](image/img42.PNG)
 
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > x HelloWorld!*main*
+        this will give us all the potential mains
+
+    > bp HelloWorld!wmain
+        break point at main function
+
+    > g
+        you can see break point is hit
+
+    > t 
+        step into
+    
+    > qd
+        detach the executable
+```
+
 ## **p command**
 
 The p command in WinDbg is used to "step over" a function or instruction. This means it will execute a single line or instruction in your code, but if that instruction is a function call, it will execute the entire function and then pause, rather than stepping into the function.
@@ -1058,12 +1080,56 @@ p
 
 ![Windbg-Intro](image/img43.PNG)
 
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > x HelloWorld!*main*
+        this will give us all the potential mains
+
+    > bp HelloWorld!wmain
+        break point at main function
+
+    > g
+        you can see break point is hit
+
+    > p 
+        step over
+    
+    > qd
+        detach the executable
+```
+
 ## **gu command**
 
 The gu command in WinDbg stands for "Go Up", which executes until the current function is complete and returns,also known as "step out".
 
 ```markdown
 gu
+```
+
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > x HelloWorld!*main*
+        this will give us all the potential mains
+
+    > bp HelloWorld!wmain
+        break point at main function
+
+    > g
+        you can see break point is hit
+
+    > gu 
+        step out
+    
+    > qd
+        detach the executable
 ```
 
 ![Windbg-Intro](image/img44.PNG)
@@ -1074,6 +1140,19 @@ The wt command in WinDbg stands for "Watch and Trace". This command executes the
 
 ```markdown
 wt
+```
+
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > wt 
+        displays watch trace
+    
+    > qd
+        detach the executable
 ```
 
 ![Windbg-Intro](image/img45.PNG)
