@@ -445,6 +445,28 @@ ln [Address]
 
 ![Windbg-Intro](image/img20.PNG)
 
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g 
+        continue and we have a breakpoint
+
+    > lm 
+        loaded modules
+
+    > x HelloWorld!?main
+        This will give a little more fine grained result
+
+    > ln address
+        address from the main 
+
+    > qd 
+        detach the executable
+```
+
 ## **r command**
 
 * The r command in WinDbg is used to display or modify the contents of registers. 
