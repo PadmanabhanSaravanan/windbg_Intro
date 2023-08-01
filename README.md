@@ -396,6 +396,43 @@ x HelloWorld!*main*
 
 ![Windbg-Intro](image/img19.PNG)
 
+**Note**
+
+```text
+If commands not executing properly or symbols files not loaded then to do this setting in visual studio
+            open project - right click on project - properties - linker - debugging - Generate debug info - Generate debug information optimized for sharing and pulishing
+
+```
+
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g 
+        continue and we have a breakpoint
+
+    > x HelloWorld!*main*
+        it'll give you addresses of the matched symbols.
+        HelloWorld - name of the binary.
+        *main* - display main function inside the binary
+
+    > lm 
+        load modules 
+        all these addresses are in this particular range of the binary
+
+    > bp HelloWorld!wmain
+        breakpoint
+        we can put breakpoints from address which are listed
+
+    > x HelloWorld!?main
+        This will give a little more fine grained result
+
+    > qd 
+        detach the executable
+```
+
 ## **ln command**
 
 * The ln command is used to display the symbol nearest to a given address. It is typically used to determine what code or data is at a particular address. 
