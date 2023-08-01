@@ -1672,3 +1672,80 @@ open helloworld executable(.exe)
     > qd
 
 ```
+
+# Call Stack and Thread Analysis
+
+* **Understanding the call stack and stack frames**
+* **Viewing and navigating the call stack**
+* **Thread**
+* **Analyzing thread information**
+
+## **Understanding the call stack and stack frames**
+
+**Call Stack**
+
+* The call stack is a fundamental concept in debugging that provides valuable information about the sequence of function calls and their associated return addresses during program execution. 
+* It allows developers to trace the flow of execution, understand the order of function calls, and identify the path leading to the current point of code execution.
+
+**stack frames**
+
+A call frame, or stack frame, is a data structure that contains information about a single function call. Each time a function is called, a new call frame is created on the call stack to store relevant information such as local variables, function parameters, and the return address.
+
+![Windbg-Intro](image/img69.png)
+
+## **Viewing and navigating the call stack**
+
+**Example:**
+
+```text
+
+
+```
+
+## **Thread**
+
+* A thread is basic unit of CPU utilization
+* It shares with other threads belonging to the same process its code section, data section, and other operating-system resources, such as open files and signals.
+* A traditional / heavyweight process has a single thread of control .If a process has multiple threads of control, it can perform more than one task at a time
+
+![Windbg-Intro](image/img70.png)
+
+## **Analyzing thread information**
+
+**~ (Tilde) Command:**
+
+The tilde command lists all the threads in the target process, along with their thread IDs (TIDs) and processor (CPU) affinity.
+
+![Windbg-Intro](image/img71.PNG)
+
+**~*k Command:**
+
+This command will list all the threads with call stack.
+
+![Windbg-Intro](image/img72.PNG)
+
+**~*r Command:**
+
+This command will list all the threads with registers.
+
+![Windbg-Intro](image/img73.PNG)
+
+**Example:**
+
+```text
+Launch Executable:
+    launch thread executable(release)
+
+    > ~ 
+        lists all the threads in the target process
+
+    > *k
+        list all the threads with call stack
+
+    > *r
+        list all the threads with registers
+
+    > qd 
+        detach the process
+
+```
