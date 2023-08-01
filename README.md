@@ -297,7 +297,7 @@ open executable:
 
     > .sympath srv*;path of symbol
         srv* the debugger uses a symbol server to get symbols from the default symbol store.
-        path of symbol C:/helloworld/cssym/helloworld.pdb
+        path of symbol C:/helloworld/cssym
 
     > lm 
         loaded modules(scroll to left we cans see the symbols present and it's path)
@@ -1355,3 +1355,4 @@ open executable:
     > qd
         detach the executable
 ```
+
