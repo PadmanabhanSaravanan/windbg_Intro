@@ -1148,6 +1148,9 @@ wt
 open executable:
     open helloworld executable(.exe)
 
+    > g
+        continue and we have a breakpoint
+
     > wt 
         displays watch trace
     
@@ -1180,6 +1183,32 @@ use .logclose command to close the file
 ![Windbg-Intro](image/img46.PNG)
 
 ![Windbg-Intro](image/img47.PNG)
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g
+        continue and we have a breakpoint
+
+    > .logopen filepath
+        filepath D:\example\log.txt
+        creates the file and enters the log
+
+    > wt 
+        displays watch trace
+
+    > k
+        call stack
+
+    > .logclose 
+        close the log file
+    
+    > qd
+        detach the executable
+
+    > open log.txt and you can see logs will be printed
+```
 
 ## **ChildEBP,retAddr,argstochild**
 
@@ -1251,6 +1280,25 @@ I got 12288, this many bytes is the difference between these two addresses.
 
 ![Windbg-Intro](image/img57.PNG)
 
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g
+        continue and we have a breakpoint
+
+    > | 
+        information about the debuggee
+
+    > || 
+        mode of debugging
+    
+    > qd
+        detach the executable
+```
+
 ## **version,vertarget commands**
 
 The **version** command in WinDbg provides information about the version of the debugging tools being used, as well as the version of the target being debugged.
@@ -1268,3 +1316,22 @@ vertarget
 ```
 
 ![Windbg-Intro](image/img59.PNG)
+
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g
+        continue and we have a breakpoint
+        
+    > version 
+        information about the version of the debugging tools being used
+
+    > vertarget 
+        information about the target system being debugged
+    
+    > qd
+        detach the executable
+```
