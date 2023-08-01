@@ -1465,6 +1465,7 @@ open stackframe executable(.exe)
 
 * [**Conditional Breakpoint**](#conditional-breakpoint)
 * [**Symbol breakpoint**](#symbol-breakpoint)
+* [**Breakpoint Unresolved**](#breakpoint-unresolved)
 
 ## **Conditional Breakpoint**
 
@@ -1515,7 +1516,7 @@ open helloworld executable(.exe)
 
 ## **Symbol breakpoint**
 
-Symbolic breakpoints are particularly useful when you don't have a specific address to break on, but you do know the name of the function or method where you want execution to stop.
+Symbolic breakpoints(bm) are particularly useful when you don't have a specific address to break on, but you do know the name of the function or method where you want execution to stop.
 
 The syntax for the bm command is as follows:
 
@@ -1544,5 +1545,71 @@ open stackframe executable(.exe)
         continue and it hits breakpoint on fun
 
     > qd
+
+```
+
+## **Breakpoint Unresolved**
+
+The bu command in WinDbg is used to set an unresolved breakpoint. This is particularly useful when you want to set a breakpoint on a function or method in a module (DLL or EXE) that has not been loaded yet.
+
+Breakpoint unresolved will anticipate a binary load and will put a breakpoint in advance
+
+The syntax for the bu command is as follows:
+
+```markdown
+bu [Options] Address [Passes] ["CommandString"]
+```
+
+```markdown
+bu comdlg32!DllMain
+```
+
+* breakdown on the unloaded binary
+
+Here:
+
+* Address is the memory address or symbol where you want to set the breakpoint.
+* Options, Passes, and CommandString are optional parameters.
+
+**Example:**
+
+```text
+ Attach Process: 
+        load notepad
+
+    > you can see the binary which are loaded
+
+    > g 
+        continue
+
+    > open notedpad file -> open in windbg you can see the binary are loading suddenly(these are the unloaded binary)
+
+    > I will use the first dll which is getting loaded when I open the file open dialog box
+
+    > break (Alt + Delete)
+
+    > qd 
+        deatch the process
+
+    Attach Process again: 
+        load notepad
+
+    > bu comdlg32!DllMain
+        breakpoint on the unloaded binary
+
+    > g
+        continue
+
+    > open notedpad file -> open
+        we can see the breakpoint is it.
+
+    > k
+        I will see the loading call path,so this is how the handler of that button so it is starting from winproc to all the way from combase to load library.
+
+    > kvn 
+        to check the dll load
+
+    > qd
+        detach the process
 
 ```
