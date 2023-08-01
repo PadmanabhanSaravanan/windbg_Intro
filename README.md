@@ -845,6 +845,47 @@ The dt command in WinDbg is used to display type information, which includes the
 
 ![Windbg-Intro](image/img39.PNG)
 
+**Recursive Dumping**
+
+The term "recursive dumping" in WinDbg refers to the process of inspecting or displaying the contents of complex data structures that may include other nested data structures. This process involves not just displaying the top-level structure, but also displaying the contents of any nested structures.
+
+**Example:**
+
+```text
+open executable:
+    open structdt executable(.exe)
+
+    > g 
+        continue and we have a breakpoint
+
+    > dv 
+        display local variables
+
+    > click on mystr
+         It evaluates expressions and displays the results in a variety of formats
+
+    > dt kcmd!MY_STRUCT
+        display the type information
+
+    > dt kcmd!MY_STRUCT address
+        address - pmystr address(information from dv)
+
+    > !peb
+        process environment block
+        The PEB is a data structure in the Windows operating system that contains data related to the executable image of a process, such as its image base address, command line, start-up information, data structures for the program's image loader, and more.
+
+    > dt address ntdll!_PEB
+        address - address from !peb (mentioned in first line)
+        ntdll!_PEB - Process Environment Block (PEB) data structure in the ntdll
+
+    > dt -r4 address ntdll!_PEB
+        -r recursively displaying nested structures
+        4 - 4 level deep recursive dumping
+
+    > qd 
+        detach the executable
+```
+
 ## **dv command**
 
 [click here for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/StackFrame)
