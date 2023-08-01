@@ -894,6 +894,28 @@ The dv command in WinDbg is used to display local variables and their values for
 
 ![Windbg-Intro](image/img36.PNG)
 
+**Example:**
+
+```text
+open executable:
+    open stackframe executable(.exe)
+
+    > g
+        continue and we have a breakpoint
+
+    > k 
+        list of call stack frames
+
+    > .frame 03
+        switch into that particular frame
+
+    > dv /V 
+        we can see all the required information
+
+    > qd 
+        detach the executable
+```
+
 ## **'s' command**
 
 The s command in WinDbg is used to search memory in a range of addresses for a pattern.
