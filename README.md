@@ -1460,3 +1460,61 @@ open stackframe executable(.exe)
     
     > qd
 ```
+
+# Additional Breakpoints
+
+* [**Conditional Breakpoint**](#conditional-breakpoint)
+* [**Tracepoint**](#tracepoint)
+* [**Data breakpoints**](#data-breakpoints)
+* [**Hit Counts**](#hit-counts)
+
+## **Conditional Breakpoint**
+
+* Breaks only if a condition is true
+* Use to filter out the unnecessary breaks of bp, bm, bu, ba variant.
+* A small “program” is given with the breakpoint command which decide to break or not.
+* We can even use the program to print the stack on break and just “go”
+* Its always better to use gc than g to go from a conditional break.
+
+```markdown
+bp HelloWorld!MyTestFunc ".if ( poi(testVar)>0n1500) {} .else {gc} "
+```
+
+* bp – breakpoint command
+* HelloWorld!MyTestFunc – function argument ,where breakpoint should be applied.
+* .if & .else – if else statement
+* poi - Pointer-sized data from the specified address
+* gc - command resumes execution from a conditional breakpoint
+
+Example:
+
+```text
+open helloworld executable(.exe)
+
+    > dt testVar
+        check the initial Variable value
+
+    > bp HelloWorld!MyTestFunc ".if ( poi(testVar)>0n1500) {} .else {gc} "
+        break only if test var is greater than 1500 or continue
+
+    > g 
+        comtinue
+
+    > dt testVar
+        check the initial Variable value
+
+    > testVar value is greater than 1500 and it is breked.
+
+    > .restart
+        restart the application
+
+    > bp HelloWorld!MyTestFunc ".if ( poi(testVar)>0n1500) {} .else { k;gc } "
+        this command will print call stack when breakpoint is hit
+
+    > qd
+
+```
+
+## **Tracepoint**
+## **Data breakpoints**
+## **Hit Counts**
