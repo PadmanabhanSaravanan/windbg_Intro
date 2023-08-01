@@ -943,6 +943,33 @@ s -a 0 L?7fffffff "hello"
 
 ![Windbg-Intro](image/img40.PNG)
 
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g
+        continue and we have a breakpoint
+
+    > s -a 0 L?7fffffff "hello"
+        s - search
+        a - ascii
+        0 - 0th address
+        ? - to search very large range of address
+        7fffffff - entire user mode address range
+        "hello" - ascii value to search 
+    
+    > dv 
+        see address of the local variable and check whether it is there in the search
+
+    > .hh s 
+        documentation on search
+
+    > qd 
+        detach the executable
+```
+
 ## **bp command**
 
 The bp command in WinDbg is used to set a breakpoint at a specified location. Breakpoints are a common debugging tool that allow you to pause the execution of a program at a specific point, so you can inspect the state of the program at that point.
