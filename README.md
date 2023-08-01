@@ -761,6 +761,7 @@ open executable:
     > u address L20
         address - specify the address from the u command
         L value argument
+        20 means 20 dwords , dwords*4 = 80 bytes
 
     > ub address L20
         displays in backward
@@ -791,6 +792,48 @@ dc <Address>
 The dps command in WinDbg is used to display memory, interpret data as both symbols and hexadecimal values, and display the resulting ASCII strings. The dps command stands for "Display Pointer-sized values with Symbols".
 
 ![Windbg-Intro](image/img37.PNG)
+
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g 
+        continue and we have a breakpoint
+
+    > dc address
+        address - specify address where you need to display memory
+
+    > dc staring_address end_address
+        displays memory between staring_address & end_address
+
+    > dc address L20
+        L20 - 20 means 20 dwords , dwords*4 = 80 bytes.
+
+    > dv 
+        local variable 
+
+    > dc address
+        address - local variable string address
+        you can see the ascii value
+
+    > db address
+        address - local variable string address
+        it will show information in bytes
+
+    > dps address
+        it will show you the pointer sized value of the address with symbols
+
+    > !teb 
+        displays stack limit and stack base
+
+    > dps stackbase stacklimit
+        raw dumping of the stack
+
+    > qd 
+        detach the executable
+```
 
 ## **dt command**
 
