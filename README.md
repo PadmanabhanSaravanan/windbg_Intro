@@ -64,6 +64,20 @@ we can launch help content in two ways.
 
 ![Windbg-Intro](image/img2.PNG)
 
+Example:
+
+```text
+ Attach Process: 
+        load notepad example
+
+    > .hh
+        Debugging Tools for Windows documentation
+
+    > qd
+        detach the process
+
+```
+
 ## **!analyze -v command**
 
 [click here for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/HelloWorld)
@@ -106,6 +120,24 @@ In the context of crash dump analysis, !analyze -v is often the first command yo
 **6. Call stack gives you the picture of how the code path reached the exception point**
 
 ![Windbg-Intro](image/img13.PNG)
+
+Example:
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g
+        continue.
+
+    > !analyze -v
+        performs an analysis of the current state.
+
+    > ~0s ; .cxr ; kb  (stack command.)
+         ~0s switching the thread to zero thread.
+         .cxr setting the context to exception context.
+         kb call stack command
+```
 
 ## **Sympath command**
 
