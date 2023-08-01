@@ -1675,10 +1675,10 @@ open helloworld executable(.exe)
 
 # Call Stack and Thread Analysis
 
-* **Understanding the call stack and stack frames**
-* **Viewing and navigating the call stack**
-* **Thread**
-* **Analyzing thread information**
+* [**Understanding the call stack and stack frames**](#understanding-the-call-stack-and-stack-frames)
+* [**Viewing and navigating the call stack**](#viewing-and-navigating-the-call-stack)
+* [**Thread**](#thread)
+* [**Analyzing thread information**](#analyzing-thread-information)
 
 ## **Understanding the call stack and stack frames**
 
