@@ -1464,9 +1464,7 @@ open stackframe executable(.exe)
 # Additional Breakpoints
 
 * [**Conditional Breakpoint**](#conditional-breakpoint)
-* [**Tracepoint**](#tracepoint)
-* [**Data breakpoints**](#data-breakpoints)
-* [**Hit Counts**](#hit-counts)
+* [**Symbol breakpoint**](#symbol-breakpoint)
 
 ## **Conditional Breakpoint**
 
@@ -1515,6 +1513,36 @@ open helloworld executable(.exe)
 
 ```
 
-## **Tracepoint**
-## **Data breakpoints**
-## **Hit Counts**
+## **Symbol breakpoint**
+
+Symbolic breakpoints are particularly useful when you don't have a specific address to break on, but you do know the name of the function or method where you want execution to stop.
+
+The syntax for the bm command is as follows:
+
+```markdown
+bm [Options] Symbol
+```
+
+```markdown
+bm kmcd!fun*
+```
+
+![Windbg-Intro](image/img68.PNG)
+
+Example:
+
+```text
+open stackframe executable(.exe)
+
+    > bm kmcd!fun*
+        All the fun* symbols, it has put breakpoint on
+
+    > x kcmd!fun*
+        we will get all the function variable
+
+    > g
+        continue and it hits breakpoint on fun
+
+    > qd
+
+```
