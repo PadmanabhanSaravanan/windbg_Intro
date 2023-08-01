@@ -64,7 +64,7 @@ we can launch help content in two ways.
 
 ![Windbg-Intro](image/img2.PNG)
 
-Example:
+**Example:**
 
 ```text
  Attach Process: 
@@ -121,14 +121,14 @@ In the context of crash dump analysis, !analyze -v is often the first command yo
 
 ![Windbg-Intro](image/img13.PNG)
 
-Example:
+**Example:**
 
 ```text
 open executable:
     open helloworld executable(.exe)
 
     > g
-        continue.
+        continue and we have a breakpoint.
 
     > !analyze -v
         performs an analysis of the current state.
@@ -137,6 +137,26 @@ open executable:
          ~0s switching the thread to zero thread.
          .cxr setting the context to exception context.
          kb call stack command
+
+    > .dump /ma pathofdump
+        take dump of the application
+        /ma full dump
+        pathofdump example "c:\path_to_dmp_file\abc.dmp"
+
+    > qd 
+        detach the executable.
+
+    > attach dump 
+            open the crash dump from the file path it is saved.
+
+    > lm 
+        list of modules.
+
+    > !analyze -v 
+        performs an analysis of the current state of the dump.
+
+    > qd 
+        detach the dump.
 ```
 
 ## **Sympath command**
@@ -165,6 +185,25 @@ The sympath command in WinDbg is used to display or set the symbol file path for
 
 ![Windbg-Intro](image/img16.PNG)
 
+Example:
+
+```text
+attach dump 
+    open the crash dump from the file path it is saved.
+
+    > .symapath 
+        To display the current symbol path
+
+    > .sympath "C:/temp"
+        set the symbol path to "C:/temp"
+
+    > .sympath
+        check the symbol is set to the defined path
+
+    > qd 
+        detach the dump
+```
+
 ## **Setting symbol path**
 
 * Open a execuatble file, file -> launch executable -> select the .exe file -> open.
@@ -177,7 +216,7 @@ The sympath command in WinDbg is used to display or set the symbol file path for
 
 * take a copy **.pdb** file and save it for further reference
 
-* next we will **delete .pdb file** from the project and **delete the cache** from the mentioned module path. i.e., **C:\ProgramData\Dbg\sym\HelloWorld.pdb\09F43444E582442E929DEDF81F87033D6\HelloWorld.pdb**
+* next we will **rename .pdb file** from the project and **delete the cache** from the mentioned module path. i.e., **C:\ProgramData\Dbg\sym\HelloWorld.pdb\09F43444E582442E929DEDF81F87033D6\HelloWorld.pdb**
 
 * now check the modules the symbol folder will not be loaded.
 
@@ -198,6 +237,75 @@ The sympath command in WinDbg is used to display or set the symbol file path for
 ```
 
 ![Windbg-Intro](image/img52.PNG)
+
+Example:
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g
+        continue and we have a breakpoint
+
+    > lm 
+        loaded modules(scroll to left we cans see the symbols present and it's path)
+
+    > .hh 
+        - open windbg documentation in index search msdl
+        - you can see where default cache symbol path will be stored
+
+    > .sympath 
+        you can see where default cache is coming from
+
+    > qd 
+        detach the executable.
+
+    > go to the project folder and rename the symbol file(.pdb) , before renaming take a copy of the file.
+            symbol file will be present where executable file is present.
+
+    > delete the cache 
+            - take the file path from the loaded module and delete the symbol file.
+
+open executable:
+    open helloworld executable(.exe)
+
+    > g
+        continue and we have a breakpoint
+
+    > k 
+        list of call stack (we cannot see any function names)
+
+    > lm 
+        loaded modules(scroll to left we cannot see symbols present)
+
+    > qd 
+        detach the executable.
+
+    > create a file name cssym(custom symbol path) to the project.
+
+    > paste the symbol file(.pdb) to the cssym folder.
+
+open executable:
+    open helloworld executable(.exe)
+
+    > g
+        continue and we have a breakpoint
+
+    > .sympath srv*;path of symbol
+        srv* the debugger uses a symbol server to get symbols from the default symbol store.
+        path of symbol C:/helloworld/cssym/helloworld.pdb
+
+    > lm 
+        loaded modules(scroll to left we cans see the symbols present and it's path)
+        defered means it has not tried to load the symbols
+        no symbols means that it tried to load the symbols and it didn't get the symbols
+     
+    > lmvm HelloWorld
+        we can see whether the symbols are there or not.
+
+    > qd 
+        detach the executable.
+```
 
 ## **Debugger extensions**
 
