@@ -1356,3 +1356,107 @@ open executable:
         detach the executable
 ```
 
+## Looping- foreach command
+
+The .foreach command in WinDbg is a powerful command used to iterate over a set of data or objects and execute a command or series of commands on each.
+
+Here's the basic syntax of the .foreach command:
+
+```markdown
+.foreach ( PlaceHolder { Command } ) { Commands }
+```
+
+* PlaceHolder is a name that holds the value of the current object in the iteration.
+* The first Command is used to get the set of objects to iterate over. This command should return a list of values or addresses.
+* The Commands inside the second pair of curly braces are the commands to be executed for each object in the set. You can refer to the current object using the PlaceHolder name.
+
+```markdown
+.foreach /f (place "D:\Test.txt") { .echo place }
+```
+
+create text file name Test.txt and run the command
+
+![Windbg-Intro](image/img62.PNG)
+
+![Windbg-Intro](image/img60.PNG)
+
+```markdown
+.foreach /f (place "D:\Test.txt") { dc place }
+```
+
+![Windbg-Intro](image/img64.PNG)
+
+![Windbg-Intro](image/img63.PNG)
+
+```markdown
+.foreach /f (place "D:\Test.txt") { .echo new start; .echo place ;dc place }
+```
+
+![Windbg-Intro](image/img66.PNG)
+
+![Windbg-Intro](image/img65.PNG)
+
+**!for_each**
+
+In WinDbg, !for_each is a very useful command that can be used to iterate over a set of elements and execute commands for each element. However, please note that !for is not a standalone command, it's usually used in the context of other commands.
+
+Here is the syntax for the !for_each command:
+
+```markdown
+!for_each [frame | local | global] <VariableName> <CommandString>
+```
+
+```markdown
+!for_each_frame !for_each_local dt @#Local
+```
+
+![Windbg-Intro](image/img67.PNG)
+
+**Example:**
+
+```text
+open stackframe executable(.exe)
+
+    > g
+        continue and we have a breakpoint
+
+    > .hh
+        opens documentation window
+
+    > in index search .foreach you can see syntax and usage.
+
+    > create a text file and write random text and save(Test.txt).
+
+    > .foreach /f (place "D:\Test.txt") { .echo place }
+        this command iterates and output text present in the file
+
+    > k
+        list of call stack
+
+    > in the created text file add the address of the stack.
+
+    > .foreach /f (place "D:\Test.txt") { dc place }
+        command will display the memory
+
+    > .foreach /f (place "D:\Test.txt") { .echo new start; .echo place ;dc place }
+        this command will iterate according to the command
+
+    > .hh
+        opens documentation window
+
+    > in index search !for you can see syntax and usage.
+
+    > !for_each_frame !for_each_local dt @#Local
+        command displays all local variables for the current stack
+
+    > !for_each_module .echo @#Base @#End
+        this command will display loaded modules
+        @#Base base address
+        @#End end 
+        
+    > lm 
+        list of modules
+        cross verify the above value with the lm command output
+    
+    > qd
+```
