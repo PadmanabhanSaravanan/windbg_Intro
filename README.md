@@ -692,6 +692,41 @@ ea 0x008eee58 "jack"
 
 ![Windbg-Intro](image/img30.PNG)
 
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > bp helloworld!MyTestFunc
+        setting break point on MyTestFunc
+
+    > g 
+        continue and we have a breakpoint
+
+    > p
+        step over
+
+    > k 
+        stack frame
+
+    > click frame number 00 you can see there the string is hello world and it's address
+
+    > ea address "jack"
+        ea edit ascii
+        address - address of the string helloworld
+        "jack" editing hello world to jacko world
+
+    > again click frame number 00 you can see there the string as been changed to jacko world.
+
+    > g 
+        continue you see in console jacko world
+
+    > .hh e
+        documentation on edit memory
+
+    > qd 
+        detach the executable
+```
+
 ## **u command** 
 
 The u command in WinDbg is used to disassemble and display a range of memory as CPU instructions (i.e., assembly code). This command is typically used to inspect the instructions that a program will execute.
