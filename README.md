@@ -745,6 +745,37 @@ The uf command in WinDbg is used to disassemble and display a complete function 
 
 ![Windbg-Intro](image/img34.PNG)
 
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g 
+        continue and we have a breakpoint
+
+    > u 
+        assemble a bunch of instructions starting from the current eip
+
+    > r
+        check whether it is starting from current eip
+
+    > u address L20
+        address - specify the address from the u command
+        L value argument
+
+    > ub address L20
+        displays in backward
+
+    > uf HelloWorld!wmain
+        HelloWorld!wmain - function
+        assembly instruction for that particular function
+
+    > uf /c HelloWorld!wmain
+        /c it will show you all the call outs
+
+    > qd 
+        detach the executable
+```
+
 ## **dc command**
 
 The **dc command** in WinDbg is used to display memory in a formatted view. The dc command stands for "Display Memory as Double Words with ASCII characters". Double words are 4 bytes long, so each line of the output shows a sequence of double words, and also their ASCII interpretations.
