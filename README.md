@@ -548,6 +548,9 @@ open executable:
     > r
         different set of registers because the thread context has changed
 
+    > ~*r 
+        displays the register context for all threads in the system
+
     > qd 
         detach the executable
 ```
@@ -590,6 +593,50 @@ kf
 
 ```markdown
 ~*k
+```
+
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g 
+        continue and we have a breakpoint
+
+    > k
+        list of call stack of current thread
+
+    > ~1s 
+        switch to the thread number 1
+
+    > k 
+        list of call stack of thread 1
+
+    > click on the dml that is frame number
+        displays local variable
+
+    >.frame 05;dv
+        .frame 05 select the frame number
+        dv - displays local variable
+
+    >.frame 05;dv /V
+        /V - gives more information about the stack
+
+    > kvn 
+        show you the arguments to the child as well
+
+    > kf 
+        show you the memory offset size for each frame
+
+    > .hh k
+        documentation of k command
+
+    > ~*k
+        displays a stack trace for all threads in the system
+
+    > qd 
+        detach the executable
 ```
 
 ## **e command**
