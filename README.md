@@ -1034,6 +1034,15 @@ open executable:
         throws a exception divide by 0
         you can see the local variables and call stack
 
+    > bl 
+        list of breakpoints
+
+    > bd *
+        disable all the breakpoints(even we can mention breakpoint number instead of *)
+
+    > be * 
+        enable all the breakpoints(even we can mention breakpoint number instead of *)
+
     > qd 
         detach the executable
 ```
