@@ -518,6 +518,40 @@ The `~*r` command in WinDbg displays the register context for all threads in the
 ~*r
 ```
 
+**Example:**
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g 
+        continue and we have a breakpoint
+
+    > r 
+         displays the contents of all registers
+
+    > r eax
+        view the contents of the eax register
+
+    > r eax = 0
+        modify the contents of a register
+
+    > .hh r
+        documentaion of the register
+    
+    > ~
+        all the thread
+
+    > ~1s 
+        switch to the thread number 1
+
+    > r
+        different set of registers because the thread context has changed
+
+    > qd 
+        detach the executable
+```
+
 ## **k command**
 
 * The k command in WinDbg displays a stack trace of the current thread. It shows the sequence of function calls that the thread has made up to the point where it currently is.
