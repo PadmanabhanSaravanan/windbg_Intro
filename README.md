@@ -1260,6 +1260,26 @@ we can check difference between stack base and stack limit
 
 I got 12288, this many bytes is the difference between these two addresses.
 
+Example:
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > g
+        continue and we have a breakpoint
+
+    > !teb 
+        thread environment block
+        it displays stack base and stack limit
+    
+    > ?stack_base-stack_limit
+        we can check difference between stack base and stack limit
+    
+    > qd
+        detach the executable
+```
+
 ## **pipe command**
 
 * pipe command will show you information about the debuggee.
@@ -1325,7 +1345,7 @@ open executable:
 
     > g
         continue and we have a breakpoint
-        
+
     > version 
         information about the version of the debugging tools being used
 
