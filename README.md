@@ -1466,6 +1466,7 @@ open stackframe executable(.exe)
 * [**Conditional Breakpoint**](#conditional-breakpoint)
 * [**Symbol breakpoint**](#symbol-breakpoint)
 * [**Breakpoint Unresolved**](#breakpoint-unresolved)
+* [**Break on Access**](#break-on-access)
 
 ## **Conditional Breakpoint**
 
@@ -1611,5 +1612,54 @@ Here:
 
     > qd
         detach the process
+
+```
+
+## **Break on Access**
+
+The ba command in WinDbg stands for "Break on Access". It sets a breakpoint at a specified location in memory. This command is especially useful when you want to stop execution when a specific memory location is accessed or modified.
+
+The syntax for the ba command is as follows:
+
+```markdown
+ba [Options] Access Size Address [Passes] ["CommandString"]
+```
+
+Here:
+
+* Access specifies the type of memory access that causes the breakpoint to be triggered: e (execute), r (read), or w (write).
+* Size is the size of the memory range that's being watched.
+* Address is the memory address at which the breakpoint is set.
+
+**Example:**
+
+```text
+open helloworld executable(.exe)
+
+    > bp HelloWorld!wmain
+        breakpoint on main function.
+
+    > g
+        continue and breakpoint hit
+
+    > dv /V
+        we address of the variable
+
+    > ba r4 address
+        address - address of initi variable
+        r - read or write
+        4 - four bytes
+
+    > g
+        continue and it will hit a break point on the variable
+        it is not exactly breaking there is because the CPU is executing the instructions out of order
+
+    > g
+        getting the correct instruction here
+
+    > ?ebp-014h
+        we can see where the breakpoint is hitting (that is the breakpoint on the variable address)
+
+    > qd
 
 ```
