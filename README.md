@@ -238,6 +238,10 @@ attach dump
 
 ![Windbg-Intro](image/img52.PNG)
 
+**Note**
+
+Executable file and symbol file time stamp should be same.
+
 **Example:**
 
 ```text
@@ -984,10 +988,55 @@ bp [options] [Address [Passes] [CommandString]]
 * CommandString is a command or sequence of commands that WinDbg should execute when the breakpoint triggers.
 
 ```markdown
-bp helloworld!MyTestFunc
+bp HelloWorld!wmain
 ```
 
 ![Windbg-Intro](image/img41.PNG)
+
+```text
+open executable:
+    open helloworld executable(.exe)
+
+    > x HelloWorld!*main*
+        this will give us all the potential mains
+
+    > bp HelloWorld!wmain
+        break point at main function
+
+    > g
+        you can see break point is hit
+
+    > bl
+        list the break point 
+
+    > bc 0 
+        remove break point.
+
+    > qd
+        detach the executable
+
+    > make changes in code(add the below code) 
+        int a = 0;
+        int b = 0;
+        int c = a/b;
+
+    > build the executable file
+
+open executable:
+    open helloworld executable(.exe)
+
+    > bp HelloWorld!MyTestFunc "dv /V;k;gc"
+        dv /V - displays local variable
+        k - call stack
+        gc - go from conditional breakpoint
+
+    > g
+        throws a exception divide by 0
+        you can see the local variables and call stack
+
+    > qd 
+        detach the executable
+```
 
 ## **t command**
 
