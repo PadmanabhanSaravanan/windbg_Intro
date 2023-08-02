@@ -2178,7 +2178,7 @@ An Access Violation, also known as a segmentation fault, is a specific kind of e
 
 ![Windbg-Intro](image/img94.png)
 
-### **AccessViolation demo**
+### **AccessViolation demo1**
 
 ```markdown
 int a[10] = { 0 };
@@ -2189,6 +2189,10 @@ int a[10] = { 0 };
 			printf("value of i = %d", i);
 	}
 ```
+
+* declare an array a of 10 integers and initialize all elements to 0.
+* You enter a loop that goes from 0 to 1111111.
+* In each iteration of the loop, you try to write the value 100 to the position -i of the array. For i=0, it's just the last element of the array (a[0]). But for i=1 and higher, you're accessing memory before the start of the array, which is not allocated for your use.
 
 ```text
 Open executable 
@@ -2214,6 +2218,33 @@ Open executable
     > let check the stack limit with instrction value ,it is very close to stack limit
 
     > we accessing stack illegally, because you are not supposed to access any value lower than esp value.
+
+    > qd
+```
+
+### **AccessViolation demo2**
+
+```markdown
+int* ptr = 0;
+	*ptr = 100;
+```
+
+* int* ptr = 0; creates a pointer to an integer and initializes it to null (0).
+* *ptr = 100; tries to write the value 100 to the memory location pointed to by ptr. But since ptr is null, this is trying to write to memory location 0, which is not a valid or accessible location in modern operating systems.
+
+```text
+Open executable 
+    open access violation executable.
+
+    > g 
+        throws an access violation.
+    
+    > r
+        see the registers
+
+    > see the instructor we trying to access eax,check eax value in registers that is equal to zero
+
+    > we cannot access at zero so it is throwing access violation.
 
     > qd
 ```
