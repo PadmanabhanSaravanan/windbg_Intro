@@ -1695,10 +1695,53 @@ A call frame, or stack frame, is a data structure that contains information abou
 
 ## **Viewing and navigating the call stack**
 
+**call stack**
+
+view the call stack using k command.
+
+![Windbg-Intro](image/img74.PNG)
+
+use kvn command to view Args to Child
+
+![Windbg-Intro](image/img75.PNG)
+
+**Stack frame**
+
+Switching into stack frame (.frame )
+
+![Windbg-Intro](image/img76.PNG)
+
+use the dv (Display Local Variables) command to view the local variables and function arguments for that function
+
+![Windbg-Intro](image/img77.PNG)
+
 **Example:**
 
 ```text
+Launch Executable:
+    launch helloworld executable(release)
 
+    > bp HelloWorld!wmain
+        breakpoint on main function
+
+    > g 
+        conitnue and breakpoint hit
+
+    > k 
+        list of stacks
+
+    > kvn
+        display a stack trace with frame numbers, module names, function names, and source line 
+        numbers for each call on the stack.
+
+    > .frame 00
+        switch into particular frame
+
+    > dv /V 
+        view the local variables and function arguments for that function
+
+    > qd
+        detach the executable
 
 ```
 
