@@ -2180,8 +2180,8 @@ An Access Violation, also known as a segmentation fault, is a specific kind of e
 
 ### **AccessViolation demo1**
 
-```markdown
-int a[10] = { 0 };
+```c++
+    int a[10] = { 0 };
 	for (int i = 0; i < 1111111; i++)
 	{
 		a[-i] = 100;
@@ -2224,8 +2224,8 @@ Open executable
 
 ### **AccessViolation demo2**
 
-```markdown
-int* ptr = 0;
+```c++
+    int* ptr = 0;
 	*ptr = 100;
 ```
 
@@ -2251,7 +2251,7 @@ Open executable
 
 ### **AccessViolation demo3**
 
-```markdown
+```c++
     int a = 0;
 	int ptr1 = 0;
 	ptr1 = (int)&a;
