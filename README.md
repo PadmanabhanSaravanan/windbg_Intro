@@ -2025,7 +2025,7 @@ Launch Executable:
 
 # Exception Handling
 
-WinDbg, you can control how the debugger handles exceptions by using the sxe, sxd, sxn, and sxi commands followed by the exception code. These commands allow you to specify whether the debugger breaks, outputs a message, or ignores the exception when it occurs.
+WinDbg, you can control how the debugger handles exceptions by event filter tool or by using the sxe, sxd, sxn, and sxi commands followed by the exception code. These commands allow you to specify whether the debugger breaks, outputs a message, or ignores the exception when it occurs.
 
 | **_Command_** |           **_Status name_**          |                                                                                                                                    **_Description_**                                                                                                                                    |
 |:-------------:|:------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
