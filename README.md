@@ -2089,6 +2089,47 @@ Open Executable:
 
 ```
 
+# Remote Debugging
+
+WinDbg is a multipurpose debugger for the Microsoft Windows computer operating system, distributed by Microsoft. Debugging Tools for Windows supports debugging of applications, services, drivers, and the Windows kernel.
+
+To set up remote debugging with WinDbg, you'll need two machines: a "host" machine (where you'll be running WinDbg), and a "target" machine (where the code you're debugging is running).
+
+[refer this link for remote debugging](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/remote-debugging-using-windbg)
+
+**Here are the steps to setup remote debugging using WinDbg:**
+
+**1.** On the host computer, open WinDbg and establish a kernel-mode debugging session with a target computer.
+
+**2.** Break in by choosing Break from the Debug menu or by pressing CTRL-Break.
+
+**3.** In the Debugger Command Window, enter the following command.
+
+```markdown
+.server tcp:port=5005
+```
+
+Note :The port number 5005 is arbitrary. The port number is your choice.
+
+**4.** WinDbg will respond with output similar to the following.
+
+```markdown
+Server started.  Client can connect with any of these command lines
+0: <debugger> -remote tcp:Port=5005,Server=YourHostComputer
+```
+
+**5.** On the remote computer, open WinDbg, and choose Connect to Remote Session from the File menu.
+
+**6.** Under Connection String, enter the string,which is given by host machine.
+
+```markdown
+tcp:Port=5005,Server=YourHostComputer
+```
+
+where YourHostComputer is the name of your host computer, which is running the debugging server.
+
+Select **OK**.
+
 # Use Cases
 
 * [**01.Simple Crash**](#01.simple-crash)
