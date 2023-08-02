@@ -2148,11 +2148,6 @@ The .ecxr command in WinDbg is used to display the context record for an excepti
 ```text
 Open Crash Dump:
     open the dump.
-    
-    > .sympath srv*;filepath
-        set the symbols
-
-    > .reload 
 
     > lm 
         executable modules will be loaded.
@@ -2166,10 +2161,10 @@ Open Crash Dump:
     
     > .ecxr
         I got into the exception context
-    
-    > k 
-        list outs the stack
+
+    > stack_command(~0s; .ecxr ; kb)
+        stack command from !analyze -v
 
     > dv 
-        to check the local variable
+        to check the local variable and we can see the values where it is throwing exception.
 ```
