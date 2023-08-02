@@ -2248,3 +2248,41 @@ Open executable
 
     > qd
 ```
+
+### **AccessViolation demo3**
+
+```markdown
+    int a = 0;
+	int ptr1 = 0;
+	ptr1 = (int)&a;
+	__asm call ptr1
+```
+
+Trying to call a function at a memory address obtained from the address of an integer variable, which will cause an Access Violation.
+
+* int a = 0; declares an integer variable a and initializes it to 0.
+* int ptr1 = 0; declares an integer variable ptr1 and initializes it to 0.
+* ptr1 = (int)&a; sets ptr1 to the memory address of a. This is an unsafe operation because it's casting a pointer to an int, which may not be able to hold the value of a pointer on all systems (especially on systems with 64-bit pointers and 32-bit integers).
+* __asm call ptr1 tries to make an assembly language call to the memory address stored in ptr1, treating that memory location as if it contains the start of a function.
+
+
+```text
+Open executable 
+    open access violation executable.
+
+    > g 
+        throws an access violation.
+    
+    > k
+        there is no proper stack value,this is not a valid address inside a binary.
+
+    > dc address
+        unknow binary address in stack
+        it is not getting a valid code.
+
+    > uf address
+        unknow binary address in stack
+        it is not valid assembly
+
+    > qd
+```
