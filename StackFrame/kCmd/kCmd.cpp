@@ -10,8 +10,7 @@ void fun4(int w)
 	int fun4local3 = 77;
 	int fun4local4 = 88;
 	printf("%d",w);
-	fun4local4 = 0;
-	fun4local4 = fun4local4 / fun4local4;
+	__asm int 3;
 }
 
 void __stdcall fun3(int i, int j)
