@@ -18,6 +18,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	testVar = 2000;
 	MyTestFunc(p, initi);
 
+	int a = 0;
+	int b = 0;
+
+	int c = a / b;
+
 	return 0;
 }
 

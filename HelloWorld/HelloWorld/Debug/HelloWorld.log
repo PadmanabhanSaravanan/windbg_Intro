@@ -1,2 +1,3 @@
-﻿  LINK : program database D:\StudentRequest_ForDren\WindbgIntro\HelloWorld\Debug\HelloWorld.pdb missing; performing full link
-  HelloWorld.vcxproj -> D:\StudentRequest_ForDren\WindbgIntro\HelloWorld\Debug\HelloWorld.exe
+﻿  stdafx.cpp
+  HelloWorld.cpp
+  HelloWorld.vcxproj -> D:\Windbg_Intro\windbg_Intro\HelloWorld\Debug\HelloWorld.exe

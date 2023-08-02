@@ -1989,7 +1989,7 @@ Launch Executable:
 
 ```
 
-#### Standard calling convention
+#### **Standard calling convention**
 
 __stdcall: This is the standard calling convention for Win32 API functions. The arguments are pushed onto the stack in right-to-left order, like __cdecl, but the function itself cleans up the stack before returning. This results in smaller code size when many functions are called, but it does not allow for variable-argument functions.
 
@@ -2021,4 +2021,79 @@ Launch Executable:
 
     > uf kmcd!fun3
         assembly of the func 3
+```
+
+# Exception Handling
+
+WinDbg, you can control how the debugger handles exceptions by using the sxe, sxd, sxn, and sxi commands followed by the exception code. These commands allow you to specify whether the debugger breaks, outputs a message, or ignores the exception when it occurs.
+
+| **_Command_** |           **_Status name_**          |                                                                                                                                    **_Description_**                                                                                                                                    |
+|:-------------:|:------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|     [sxe](#sxi)       |     Break(Enabled)                   |     When this exception occurs, the target immediately breaks into the debugger before any other error handlers are activated. This kind of handling is called first chance handling.                                                                                                   |
+|     [sxd](#sxd)       |     Second chance break(Disabled)    |     The debugger does not break for a first-chance exception of this type(although a message is   displayed). If other error handlers do not address this exception, execution stops and the target breaks into the debugger.This kind of handling is called second chance handling.    |
+|     sxn       |     Output(Notify)                   |     When this exception occurs, the target application does not break into the debugger at all.However, a message is displayed that notifies theuser of this exception.                                                                                                                 |
+|     [sxi](#sxi)      |     Ignore                           |     When this exception occurs. the   target application does not break into the debugger at all, and no message is   displayed                                                                                                                                                         |
+
+![Windbg-Intro](image/img83.png)
+
+## **sxe**
+
+First chance exception 
+
+![Windbg-Intro](image/img84.png)
+
+```text
+Launch Executable:
+    launch helloworld executable(release)
+
+    > g
+        breakpoint to the main function
+
+    > you can see first chance exception as occured
+```
+
+## **sxd**
+
+Second chance exception 
+
+![Windbg-Intro](image/img85.png)
+
+```text
+Launch Executable:
+    launch helloworld executable(release)
+
+    > g
+        breakpoint to the main function
+
+    > you can see first chance exception as occured
+
+    > sxe exceptioncode
+        exceptioncode from the first chance exception.
+
+    > you can see second chance exception as occured
+```
+
+## **sxi**
+
+* Set ignore to exception 
+* Application get crash due to unhandled exception
+
+![Windbg-Intro](image/img86.png)
+
+```text
+Launch Executable:
+    launch helloworld executable(release)
+
+    > g
+        breakpoint to the main function
+
+    > you can see first chance exception as occured
+
+    > sxe exceptioncode
+        exceptioncode from the first chance exception.
+
+    > you can see second chance exception as occured.
+
+    > sxi exceptioncode
+        this command will ignore the exception.
 ```
