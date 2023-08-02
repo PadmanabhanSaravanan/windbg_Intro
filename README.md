@@ -2034,66 +2034,57 @@ WinDbg, you can control how the debugger handles exceptions by using the sxe, sx
 |     sxn       |     Output(Notify)                   |     When this exception occurs, the target application does not break into the debugger at all.However, a message is displayed that notifies theuser of this exception.                                                                                                                 |
 |     [sxi](#sxi)      |     Ignore                           |     When this exception occurs. the   target application does not break into the debugger at all, and no message is   displayed                                                                                                                                                         |
 
-![Windbg-Intro](image/img83.png)
+**Example:**
 
-## **sxe**
-
-First chance exception 
-
-![Windbg-Intro](image/img84.png)
+In helloworld program make cahnges that the program causes exception integer-divide by zero
 
 ```text
-Launch Executable:
-    launch helloworld executable(release)
+Open Executable:
+    open helloworld executable.
 
     > g
-        breakpoint to the main function
+        continue and breaks Integer divide by zero.
 
-    > you can see first chance exception as occured
-```
+    > In Toolbar go to Debug -> event filters
+        you can see Integer divide by zero is defaulty enabled(execution enabled).
 
-## **sxd**
-
-Second chance exception 
-
-![Windbg-Intro](image/img85.png)
-
-```text
-Launch Executable:
-    launch helloworld executable(release)
+    > I'm going to enable it and close event filters and going to restart.
+    
+    > .restart
+        restart the application
 
     > g
-        breakpoint to the main function
+        Integer divide by zero first chance,we got it first chance and it broke into the Debugger.
 
-    > you can see first chance exception as occured
+    > we can go and change the event filters to disabled(execution disabled)
 
-    > sxe exceptioncode
-        exceptioncode from the first chance exception.
-
-    > you can see second chance exception as occured
-```
-
-## **sxi**
-
-* Set ignore to exception 
-* Application get crash due to unhandled exception
-
-![Windbg-Intro](image/img86.png)
-
-```text
-Launch Executable:
-    launch helloworld executable(release)
+    > .restart
+        restart the application
 
     > g
-        breakpoint to the main function
+        Integer divide by zero exception broke at second chance into the Debugger.
 
-    > you can see first chance exception as occured
+    > we can go and change the event filters to output(execution output)
 
-    > sxe exceptioncode
-        exceptioncode from the first chance exception.
+    > .restart
+        restart the application
 
-    > you can see second chance exception as occured.
+    > g
+        you can see the application is not breaking into debugger
 
-    > sxi exceptioncode
-        this command will ignore the exception.
+    > manually break
+
+    > we can go and change the event filters to ignore(execution ignore)
+
+    > .restart
+        restart the application
+
+    > g
+        debugger will ignore the exception and it will not break and will not print any message.
+
+    > manually break
+
+    > qd 
+        detach
+
 ```
