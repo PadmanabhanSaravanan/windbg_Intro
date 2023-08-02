@@ -1,0 +1,3 @@
+﻿  thread.cpp
+C:\Users\admin\Desktop\New folder\Threads\Threads\thread.cpp(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Threads.vcxproj -> C:\Users\admin\Desktop\New folder\Threads\x64\Debug\Threads.exe
