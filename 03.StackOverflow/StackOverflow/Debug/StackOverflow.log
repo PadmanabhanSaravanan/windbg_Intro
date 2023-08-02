@@ -1,0 +1,4 @@
+﻿  stdafx.cpp
+  StackOverflow.cpp
+C:\Users\admin\Downloads\Materials\UserMode\Crash\StackOverflow\StackOverflow\StackOverflow.cpp(12): warning C4717: 'MyBadFun': recursive on all control paths, function will cause runtime stack overflow
+  StackOverflow.vcxproj -> C:\Users\admin\Downloads\Materials\UserMode\Crash\StackOverflow\Debug\StackOverflow.exe

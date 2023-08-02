@@ -1,0 +1,9 @@
+﻿  stdafx.cpp
+  StackOverflow.cpp
+  Generating code
+C:\Trainings\Windbg\Resources\Projects\UserMode\Crash\StackOverflow\StackOverflow\StackOverflow.cpp(12): warning C4717: 'MyBadFun': recursive on all control paths, function will cause runtime stack overflow
+  2 of 2 functions (100.0%) were compiled.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  StackOverflow.vcxproj -> C:\Trainings\Windbg\Resources\Projects\UserMode\Crash\StackOverflow\Release\StackOverflow.exe
