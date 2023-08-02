@@ -2093,6 +2093,7 @@ Open Executable:
 
 * [**01.Simple Crash**](#01.simple-crash)
 * [**02.AccessViolation**](#02.accessviolation)
+* [**03.HeapCorruption**](#03.heapcorruption)
 
 ## **01.Simple Crash**
 
@@ -2180,7 +2181,7 @@ An Access Violation, also known as a segmentation fault, is a specific kind of e
 
 ### **AccessViolation demo1**
 
-```c++
+```c
     int a[10] = { 0 };
 	for (int i = 0; i < 1111111; i++)
 	{
@@ -2224,7 +2225,7 @@ Open executable
 
 ### **AccessViolation demo2**
 
-```c++
+```c
     int* ptr = 0;
 	*ptr = 100;
 ```
@@ -2251,7 +2252,7 @@ Open executable
 
 ### **AccessViolation demo3**
 
-```c++
+```c
     int a = 0;
 	int ptr1 = 0;
 	ptr1 = (int)&a;
@@ -2285,4 +2286,45 @@ Open executable
         it is not valid assembly
 
     > qd
+```
+
+## **03.StackOverflow**
+
+Stack overflow occurs when a program's call stack exceeds its maximum size limit. The call stack is a special region of computer's memory that stores information about the active subroutines or functions in a program. This information typically includes return addresses, passed parameters, and local variables.
+
+When a function is called, a new stack frame is pushed onto the call stack. The stack frame contains the return address, the function's parameters, and space for its local variables. When the function returns, its stack frame is popped from the call stack. If a program calls functions in a way that the call stack grows beyond its maximum limit, this results in a stack overflow.
+
+```c
+void MyBadFun()
+{
+	int a[1000] = { 0 };
+	MyBadFun();
+	return;
+}
+
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	MyBadFun();
+	return 0;
+}
+```
+
+MyBadFun() calls itself indefinitely, with each call adding a new stack frame that includes the a[1000] array. Because each stack frame consumes a significant amount of memory (at least 1000 integers * 4 bytes/int = 4000 bytes), and because there's no limit to the recursion, the stack eventually runs out of space and a stack overflow occurs.
+
+### **StackOverflow demo**
+
+```text
+Open Executable
+    open stackoverflow executable.
+
+    > g
+        stackoverflow exception(Stack overflow - code c00000fd (first chance))
+
+    > !analyze -v 
+        it is trying to tells us that there is an stackoverflow(FAILURE_BUCKET_ID:  STACK_OVERFLOW_c00000fd_StackOverflow.exe!wmain)
+        ERROR_CODE: (NTSTATUS) 0xc00000fd - A new guard page for the stack cannot be created.
+
+    > k 
+        to see the stack
 ```
