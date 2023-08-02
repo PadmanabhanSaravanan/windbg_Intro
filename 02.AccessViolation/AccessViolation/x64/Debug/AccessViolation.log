@@ -1,4 +1,0 @@
-﻿  AccessViolation.cpp
-  stdafx.cpp
-  Generating Code...
-D:\Windbg_Intro\windbg_Intro\02.AccessViolation\AccessViolation\AccessViolation.cpp(9): error C4789: buffer 'a' of size 40 bytes will be overrun; 4 bytes will be written starting at offset 44
