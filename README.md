@@ -1927,21 +1927,23 @@ Launch Executable:
 
 When a function is called in a C or C++ program on Windows, the function's prologue and epilogue handle setting up and tearing down the stack frame for that function. Here's how it generally works:
 
+In the above assemby instruction first two line is function prologue and last two line is function epilogue.
+
 **Function Prologue:**
 
-* Push Old Base Pointer onto Stack: The function starts by saving the old base pointer (ebp on x86, rbp on x64) onto the stack with a push instruction. This allows the function to be reentrant or recursive, and allows for the previous state to be restored later.
+* **Push Old Base Pointer onto Stack:** The function starts by saving the old base pointer (ebp on x86, rbp on x64) onto the stack with a push instruction. This allows the function to be reentrant or recursive, and allows for the previous state to be restored later.
 
-* Set New Base Pointer: Next, the function sets the base pointer to the current stack pointer (esp on x86, rsp on x64) with a mov instruction. This establishes a fixed reference point in the stack for accessing function parameters and local variables.
+* **Set New Base Pointer:** Next, the function sets the base pointer to the current stack pointer (esp on x86, rsp on x64) with a mov instruction. This establishes a fixed reference point in the stack for accessing function parameters and local variables.
 
-* Allocate Space for Local Variables: The function then adjusts the stack pointer by subtracting the total size of local variables from it. This allocates space on the stack for local variables.
+* **Allocate Space for Local Variables:** The function then adjusts the stack pointer by subtracting the total size of local variables from it. This allocates space on the stack for local variables.
 
 **Function Epilogue:**
 
-* Deallocate Local Variables: The function starts its cleanup by moving the stack pointer back to the base pointer. This effectively deallocates the space that was used for local variables.
+* **Deallocate Local Variables:** The function starts its cleanup by moving the stack pointer back to the base pointer. This effectively deallocates the space that was used for local variables.
 
-* Restore Old Base Pointer: The function then pops the old base pointer value from the stack, restoring the stack state to what it was before the function was called.
+* **Restore Old Base Pointer:** The function then pops the old base pointer value from the stack, restoring the stack state to what it was before the function was called.
 
-* Return to Caller: Finally, the function executes a ret instruction, which pops the return address from the stack and jumps to it. This transfers control back to the function that made the call.
+* **Return to Caller:** Finally, the function executes a ret instruction, which pops the return address from the stack and jumps to it. This transfers control back to the function that made the call.
 
 ### **Calling conventions**
 
@@ -1949,7 +1951,7 @@ Calling convention is all about how the function call is being made and how the 
 
 * callee is the function which is being called and caller is the function calls the callee.
 
-In 32-bit Windows Compiler, there are majorly two types of calling convention one is [cdecl calling convention](#cdecl-calling-convention) and another is standard calling convention.
+In 32-bit Windows Compiler, there are majorly two types of calling convention one is [cdecl calling convention](#cdecl-calling-convention) and another is [standard calling convention](#standard-calling-convention).
 
 #### **cdecl calling convention** 
 
