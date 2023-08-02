@@ -1747,9 +1747,9 @@ Launch Executable:
 
 ## **Thread**
 
-* A thread is basic unit of CPU utilization
-* It shares with other threads belonging to the same process its code section, data section, and other operating-system resources, such as open files and signals.
-* A traditional / heavyweight process has a single thread of control .If a process has multiple threads of control, it can perform more than one task at a time
+* Threads are  nothing but a  group of CPU instruction  guaranteed  to execute in  the order we  are giving.
+* Thread stack help to maintain  the  order of  execution and have  local variables.
+
 
 ![Windbg-Intro](image/img70.png)
 
@@ -1773,6 +1773,14 @@ This command will list all the threads with registers.
 
 ![Windbg-Intro](image/img73.PNG)
 
+**!teb command**
+
+Thread environment block:
+
+The Thread Environment Block (TEB) is a data structure in Windows operating systems that contains information related to the currently running thread, including thread-local storage, structured exception handling, stack bounds, and more.
+
+![Windbg-Intro](image/img78.PNG)
+
 **Example:**
 
 ```text
@@ -1787,6 +1795,12 @@ Launch Executable:
 
     > *r
         list all the threads with registers
+
+    > !teb
+        thread environment block
+
+    > bp Threads!printNumbers ".if ( poi(isEven)=1) {} .else {gc} "
+        put breakpoint if isEven = true
 
     > qd 
         detach the process
