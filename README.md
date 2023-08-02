@@ -2094,6 +2094,7 @@ Open Executable:
 * [**01.Simple Crash**](#01.simple-crash)
 * [**02.AccessViolation**](#02.accessviolation)
 * [**03.HeapCorruption**](#03.heapcorruption)
+* [**04.Bad Exception Handler**](#04.bad-exception-handler)
 
 ## **01.Simple Crash**
 
@@ -2154,15 +2155,14 @@ Open Crash Dump:
     > lm 
         executable modules will be loaded.
 
-    > if the dump is collected by the WER or the Windows Error Reporting, it is guaranteed to be a second chance exception
+    > if the dump is collected by the WER or the Windows Error Reporting, 
+        it is guaranteed to be a second chance exception
 
     > !analyze -v
         -it give the analyze of the dump.
-        -there is a default exception handler in this particular function actually,that is the one which is launching the WER.
+        -there is a default exception handler in this particular function actually,
+            that is the one which is launching the WER.
         look into stack_text you can see the handler(ntdll!_RtlUserThreadStart+0x1b)
-    
-    > .ecxr
-        I got into the exception context
 
     > stack_command(~0s; .ecxr ; kb)
         stack command from !analyze -v
@@ -2294,6 +2294,8 @@ Stack overflow occurs when a program's call stack exceeds its maximum size limit
 
 When a function is called, a new stack frame is pushed onto the call stack. The stack frame contains the return address, the function's parameters, and space for its local variables. When the function returns, its stack frame is popped from the call stack. If a program calls functions in a way that the call stack grows beyond its maximum limit, this results in a stack overflow.
 
+### **StackOverflow demo**
+
 ```c
 void MyBadFun()
 {
@@ -2312,8 +2314,6 @@ int _tmain(int argc, _TCHAR* argv[])
 
 MyBadFun() calls itself indefinitely, with each call adding a new stack frame that includes the a[1000] array. Because each stack frame consumes a significant amount of memory (at least 1000 integers * 4 bytes/int = 4000 bytes), and because there's no limit to the recursion, the stack eventually runs out of space and a stack overflow occurs.
 
-### **StackOverflow demo**
-
 ```text
 Open Executable
     open stackoverflow executable.
@@ -2322,9 +2322,86 @@ Open Executable
         stackoverflow exception(Stack overflow - code c00000fd (first chance))
 
     > !analyze -v 
-        it is trying to tells us that there is an stackoverflow(FAILURE_BUCKET_ID:  STACK_OVERFLOW_c00000fd_StackOverflow.exe!wmain)
-        ERROR_CODE: (NTSTATUS) 0xc00000fd - A new guard page for the stack cannot be created.
+        -it is trying to tells us that there is an stackoverflow
+        (FAILURE_BUCKET_ID:  STACK_OVERFLOW_c00000fd_StackOverflow.exe!wmain)
+        -ERROR_CODE: (NTSTATUS) 0xc00000fd - A new guard page for the stack cannot be created.
 
     > k 
         to see the stack
 ```
+
+## **04.Bad Exception Handler**
+
+A bad exception handler is one that does not properly manage exceptions when they occur. Exception handling is used to respond to the occurrence of exceptions, which are anomalies that occur during the execution of a program.
+
+The Ostrich Algorithm is a concept in computer science used for dealing with errors or exceptions in a system. The name is derived from the behavior of ostriches, which are said to bury their heads in the sand when they sense danger.
+
+In the context of system design and computing, the Ostrich Algorithm implies ignoring potential errors or problems under the assumption that the cost of detecting and handling these exceptions would exceed the cost of dealing with a system crash if it happens.
+
+### **Bad Exception Handler Demo**
+
+```c
+int main()
+{
+    __try
+    {
+        std::cout << "Hello World!\n";
+
+        int* ptr = 0;
+
+        std::cout << "We are happy so far. But still long way to go.\n";
+
+        *ptr = 100;
+
+        std::cout << "Yes we did it.\n";
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+        exit(1);
+    }
+}
+```
+
+The program creates a null pointer ptr and attempts to dereference(To access the value or object located in a memory location stored in a pointer or another value interpreted as such) it to assign the value 100. This results in a memory access violation because it's trying to write to memory location 0, which is not allowed.
+
+```text
+Open Executable
+    open stackoverflow executable.
+
+    > g
+        continue and throws access violation
+
+    > g
+        again continue.
+
+    > k 
+        check the call stack you can see the process is terminating.
+        ntdll!NtTerminateProcess
+
+    > .restart
+        restart the application.
+
+    > g
+        continue and throws access violation
+
+    > !exchain
+        to see the different exception handlers available
+        OstrichOnStage!_except_handler4 this is exception handler from the program.
+
+    > bp OstrichOnStage!_except_handler4
+        put breakpoint on the exception handler
+
+    > g
+
+    > k
+        - you can see that ntdll!KiUserExceptionDispatcher is being called from the main, 
+        if you look into the main, this function is never getting called from main
+        - there was an interrupt came while we were executing the main and the operating system 
+        took control
+
+    > all the interrupts are handled inside the operating system, inside the kernel the kernel handler 
+    got executed and then it called different functions in user mode
+```
+
+It is causing an interrupt, as part of the interrupt handling,it is calling this particular user mode function from the kernel and finally the handler. That is how the interrupt handling works and 
+why it is showing in the same stack, because this part of the code is executing in the context of exact same thread because of that, it is sharing the stack or the stack is same for this part of the code and this,that is why it is getting displayed in the same call stack. It doesn't mean that this function is calling this function.
