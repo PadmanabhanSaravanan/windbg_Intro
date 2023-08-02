@@ -1808,3 +1808,215 @@ Launch Executable:
         detach the process
 
 ```
+
+# Assembly Language
+
+* [**Assembly**](#assembly)
+* [**Understanding Assembly Launguage**](#understanding-assembly-launguage)
+
+## **Assembly**
+
+**Why do we need?**
+
+* Reverse engineering or understand the flow in other modules and functions.
+* Finding the arguments from stack
+
+-> Sparingly used.
+
+-> Tedious and time consuming but at time in evitable.
+
+-> Last resort.
+
+-> Only some 10% or small subset of it is needed for our purpose.
+
+-> How the stack is maintained is one off the major focus.
+
+## **Understanding Assembly Launguage 32bit**
+
+* [**Registers**](#registers)
+* [**Basic instructions**](#basic-instructions)
+* [**Stack handling of windows compiler**](#stack-handling-of-windows-compiler)
+* [**Calling conventions**](#calling-conventions)
+* [**Demo**](#demo)
+
+![Windbg-Intro](image/img69.png)
+
+### **Registers**
+
+Registers are a small amount of storage available as part of a computer's CPU (Central Processing Unit). They are used to quickly store and retrieve data during a program's execution. The number and type of registers vary depending on the architecture of the CPU, but they often include:
+
+**1. General-Purpose Registers:** These can be used for any data manipulation operation. Examples include EAX, EBX, ECX, EDX in the x86 architecture.
+
+**2. Instruction Pointer:** Also called a program counter, this register points to the next instruction to be executed. EIP (Extended Instruction Pointer) is used in x86.
+
+**3. Stack Pointer:** This points to the top of the current stack frame. ESP (Extended Stack Pointer) is used in x86.
+
+**4. Base Pointer:** Also called a frame pointer, this points to a fixed location within a stack frame. EBP (Extended Base Pointer) is used in x86.
+
+![Windbg-Intro](image/img79.png)
+
+**Example**
+
+```text
+Use StackFrame program
+
+    > first we need to make some changes to the program
+        - in fun3 add __stdcall (void __stdcall fun3(int i,int j){ }).  __stdcall is the calling covention.
+        - In project properties C/C++ -> Optimization -> diabled & Inline Function Expansion -> disabled(platform 32)
+        - build it in release mode 32bit for debugging.
+
+Launch Executable:
+    launch stackframe executable(release)
+
+    > bp kcmd!wmain
+        breakpoint to the main function
+
+    > g
+        continue and breakpoint hits
+
+    > r 
+        to see the registers
+```
+
+### **Basic instructions**
+
+use uf command to see the assemby instruction.
+
+```markdown
+uf kcmd!wmain
+```
+
+the example shows the machine-level representation of the wmain function from the kCmd module in your program.
+
+![Windbg-Intro](image/img80.PNG)
+
+**Understand the assemby instruction**
+
+**1. push ebp**: This is the start of the function prologue. It's saving the old base pointer value onto the stack so that it can be restored later. The base pointer is used to reference local variables and function arguments.
+
+**2. mov ebp, esp**: This is the second part of the function prologue. It's setting the base pointer to the current stack pointer, which effectively creates a new stack frame for this function.
+
+**3. push 8Bh, push 12Ch, push 0C8h, push 64h**: These instructions are pushing the hex values 8B, 12C, 0C8, and 64 onto the stack. These are likely arguments to the function fun1.
+
+**4. call kCmd!fun1**: This instruction is calling the fun1 function, passing it the arguments that were just pushed onto the stack.
+
+**5. add esp,10h**: This instruction is cleaning up the stack after the call to fun1. It's adding 0x10 (or 16 in decimal) to the stack pointer, effectively removing the four arguments that were pushed onto the stack before the fun1 call.
+
+**6. xor eax,eax**: This instruction is setting the eax register to 0. The xor operation is a common way to zero a register in assembly. The eax register is typically used to hold a function's return value, so this could be setting the return value of wmain to 0.
+
+**7. pop ebp**: This is the start of the function epilogue. It's restoring the old base pointer value from the stack, returning us to the parent stack frame.
+
+**8. ret**: This is the end of the function. It's returning control to the function that called wmain, popping the return address from the stack and jumping to it.
+
+```text
+Launch Executable:
+    launch stackframe executable(release)
+
+    > bp kcmd!wmain
+        breakpoint to the main function
+
+    > g
+        continue and breakpoint hits
+
+    > uf kcmd!wmain 
+        to see the assembly instructions
+
+```
+
+### **Stack handling of windows compiler**
+
+When a function is called in a C or C++ program on Windows, the function's prologue and epilogue handle setting up and tearing down the stack frame for that function. Here's how it generally works:
+
+**Function Prologue:**
+
+* Push Old Base Pointer onto Stack: The function starts by saving the old base pointer (ebp on x86, rbp on x64) onto the stack with a push instruction. This allows the function to be reentrant or recursive, and allows for the previous state to be restored later.
+
+* Set New Base Pointer: Next, the function sets the base pointer to the current stack pointer (esp on x86, rsp on x64) with a mov instruction. This establishes a fixed reference point in the stack for accessing function parameters and local variables.
+
+* Allocate Space for Local Variables: The function then adjusts the stack pointer by subtracting the total size of local variables from it. This allocates space on the stack for local variables.
+
+**Function Epilogue:**
+
+* Deallocate Local Variables: The function starts its cleanup by moving the stack pointer back to the base pointer. This effectively deallocates the space that was used for local variables.
+
+* Restore Old Base Pointer: The function then pops the old base pointer value from the stack, restoring the stack state to what it was before the function was called.
+
+* Return to Caller: Finally, the function executes a ret instruction, which pops the return address from the stack and jumps to it. This transfers control back to the function that made the call.
+
+### **Calling conventions**
+
+Calling convention is all about how the function call is being made and how the arguments are passed from one function to the other function. So there is callee and caller.
+
+* callee is the function which is being called and caller is the function calls the callee.
+
+In 32-bit Windows Compiler, there are majorly two types of calling convention one is [cdecl calling convention](#cdecl-calling-convention) and another is standard calling convention.
+
+#### **cdecl calling convention** 
+
+This is the default calling convention for C and C++ programs. In __cdecl, function arguments are pushed onto the stack in right-to-left order. The caller is responsible for cleaning up the stack after the function returns. This allows for variable-argument functions (like printf), but it can lead to larger code size when many functions are called due to the frequent stack cleanup code.
+
+```markdown
+uf kcmd!fun1
+```
+
+![Windbg-Intro](image/img81.PNG)
+
+* **mov eax, dword ptr [ebp+14h]; mov ecx, dword ptr [ebp+10h]; lea edx,[ecx+eax+1Eh]:** These instructions are preparing arguments for the call to fun2. It's loading function arguments into registers and calculating the value of one of the arguments (ecx+eax+1Eh).
+
+* **push edx; push eax; push ecx:** These instructions are pushing the calculated values onto the stack in reverse order, preparing for the function call to fun2.
+
+* **call kCmd!fun2:** This instruction is calling the fun2 function with the arguments that were just pushed onto the stack.
+
+* **add esp, 0Ch:** This instruction is cleaning up the stack after the call to fun2. It's adding 0Ch (or 12 in decimal) to the stack pointer, which removes the three arguments that were pushed onto the stack before the fun2 call.
+
+```text
+Launch Executable:
+    launch stackframe executable(release)
+
+    > bp kcmd!wmain
+        breakpoint to the main function
+
+    > g
+        continue and breakpoint hits
+    
+    > t
+        step into
+
+    > uf kmcd!fun1
+        assembly of the func 1
+
+```
+
+#### Standard calling convention
+
+__stdcall: This is the standard calling convention for Win32 API functions. The arguments are pushed onto the stack in right-to-left order, like __cdecl, but the function itself cleans up the stack before returning. This results in smaller code size when many functions are called, but it does not allow for variable-argument functions.
+
+uf kcmd!fun2
+
+uf kcmd!fun3
+
+![Windbg-Intro](image/img82.PNG)
+
+* function3 is Standard calling convention
+* function2 is calling the function3 we will not be seeing this add instructions uf kcmd!fun2. After the call we can't see an add instruction right here, but still we have push instructions.
+* fun3 , in the final ret we can see this eight is mentioned, this ret8 what it means is that this much stack deallocation has to be done, after the execution of this function, which means that this is where we are cleaning up the stack, this is equal to add esp,8, then ret. This is doing that in the single instruction right here, this is where we are deallocating the memory we have allocated in the previous function.
+
+```text
+Launch Executable:
+    launch stackframe executable(release)
+
+    > bp kcmd!wmain
+        breakpoint to the main function
+
+    > g
+        continue and breakpoint hits
+    
+    > t
+        step into
+
+    > uf kmcd!fun2
+        assembly of the func 2
+
+    > uf kmcd!fun3
+        assembly of the func 3
+```
