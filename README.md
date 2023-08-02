@@ -2176,7 +2176,7 @@ Open Crash Dump:
 
 An Access Violation, also known as a segmentation fault, is a specific kind of error that occurs when a program tries to access a memory location that it's not allowed to access, or tries to perform an operation (like write) that it's not allowed to perform on a particular memory location.
 
-![Windbg-Intro](image/img94.PNG)
+![Windbg-Intro](image/img94.png)
 
 ### **AccessViolation demo**
 
