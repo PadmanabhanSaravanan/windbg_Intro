@@ -2088,3 +2088,86 @@ Open Executable:
         detach
 
 ```
+
+# Use Cases
+
+* [**01.Simple Crash**](#01.simple-crash)
+
+## **01.Simple Crash**
+
+When a simple crash occurs, the operating system typically stops the program and generates an error report, which may include a core dump or a minidump. This report can be analyzed with a debugger to understand the state of the program at the time of the crash and hopefully determine what caused it.
+
+* [**Generate an error report**](#generate-an-error-report)
+* [**Demo Simple Crash**](#demo-simple-crash)
+
+### **Generate an error report**
+
+* we will set path to save the crash dump using windows error reporting.
+
+* open run app and type ‘regedit’, this command will open register editor.
+
+![Windbg-Intro](image/img87.PNG)
+
+* Go to this file path `Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting`
+
+![Windbg-Intro](image/img88.PNG)
+
+* Create a new folder LocalDumps in windows error reporting folder(**right click on Windows Error Reporting -> New -> Key**)
+
+![Windbg-Intro](image/img89.PNG)
+
+* Create dump folder in LocalDumps by **right click on LocalDumps -> New -> Expandable String Value**. name it has DumpFolder and **right click on DumpFolder -> Modify -> In Value data** specify the file path to save the dump and click OK.
+
+![Windbg-Intro](image/img90.PNG)
+
+* Create dump type in LocalDumps by **right click on LocalDumps -> New -> DWORD** and name it has DumpType and **right click on DumpFolder -> Modify -> In Value data** specify the number 2.
+
+![Windbg-Intro](image/img91.PNG)
+
+### **Demo Simple Crash**
+
+* After setting the file path ,run the executable file .
+* Disappearance of an application without standard closing  methods is a crash.
+* when it is crashed a dump file will be saved at the file path specified.
+* Take the dump file and starting analyzing issue.
+ 
+![Windbg-Intro](image/img92.PNG)
+
+* In Event viewer we can look any application as crashed.
+
+* run -> eventvwr -> windows logs -> application , in the log we can see the error .
+
+![Windbg-Intro](image/img93.PNG)
+
+**Note:**
+
+The .ecxr command in WinDbg is used to display the context record for an exception. The context record includes the state of all the registers at the time when the exception occurred. This can be extremely useful when debugging an exception because it allows you to see exactly what the CPU was doing when the exception happened
+
+```text
+Open Crash Dump:
+    open the dump.
+    
+    > .sympath srv*;filepath
+        set the symbols
+
+    > .reload 
+
+    > lm 
+        executable modules will be loaded.
+
+    > if the dump is collected by the WER or the Windows Error Reporting, it is guaranteed to be a second chance exception
+
+    > !analyze -v
+        -it give the analyze of the dump.
+        -there is a default exception handler in this particular function actually,that is the one which is launching the WER.
+        look into stack_text you can see the handler(ntdll!_RtlUserThreadStart+0x1b)
+    
+    > .ecxr
+        I got into the exception context
+    
+    > k 
+        list outs the stack
+
+    > dv 
+        to check the local variable
+```
