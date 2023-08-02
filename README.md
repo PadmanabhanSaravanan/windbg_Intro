@@ -2092,6 +2092,7 @@ Open Executable:
 # Use Cases
 
 * [**01.Simple Crash**](#01.simple-crash)
+* [**02.AccessViolation**](#02.accessviolation)
 
 ## **01.Simple Crash**
 
@@ -2167,4 +2168,52 @@ Open Crash Dump:
 
     > dv 
         to check the local variable and we can see the values where it is throwing exception.
+```
+
+## **02.AccessViolation**
+
+[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/02.AccessViolation)
+
+An Access Violation, also known as a segmentation fault, is a specific kind of error that occurs when a program tries to access a memory location that it's not allowed to access, or tries to perform an operation (like write) that it's not allowed to perform on a particular memory location.
+
+![Windbg-Intro](image/img94.PNG)
+
+### **AccessViolation demo**
+
+```markdown
+int a[10] = { 0 };
+	for (int i = 0; i < 1111111; i++)
+	{
+		a[-i] = 100;
+		if (i == 11111111)
+			printf("value of i = %d", i);
+	}
+```
+
+```text
+Open executable 
+    open access violation executable.
+
+    > g 
+        breaks at a point.
+    
+    > r
+        see the registers
+
+    > !teb
+        for thread environment block
+
+    > r esp 
+    
+    > compare the esp value with stack limit.(it is not close)
+
+    > Lets look at the instruction value which is causing the problem
+
+    > ?[instruction]
+
+    > let check the stack limit with instrction value ,it is very close to stack limit
+
+    > we accessing stack illegally, because you are not supposed to access any value lower than esp value.
+
+    > qd
 ```
