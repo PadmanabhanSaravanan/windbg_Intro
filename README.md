@@ -1853,7 +1853,7 @@ Registers are a small amount of storage available as part of a computer's CPU (C
 
 **4. Base Pointer:** Also called a frame pointer, this points to a fixed location within a stack frame. EBP (Extended Base Pointer) is used in x86.
 
-![Windbg-Intro](image/img79.png)
+![Windbg-Intro](image/img79.PNG)
 
 **Example**
 
