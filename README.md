@@ -2213,6 +2213,7 @@ Reconnect
 * [**05.NormalHang**](#05.normalhang)
 * [**06.Deadlock**](#06.deadlock)
 * [**07.Mutex**](#07.mutex)
+* [**08.HeapCorruption**]
 
 ## **01.Simple Crash**
 
@@ -2815,6 +2816,97 @@ Run Mutex Application
     
     > k
         we can see that owining thread is sleeping.
+
+    > qd
+```
+
+## **08.HeapCorruption**
+
+Heap corruption is a common problem in programs written in languages like C or C++, which allow for direct manipulation of memory. It occurs when a program damages the heap data structure
+
+```c
+#include "stdafx.h"
+#include <stdlib.h>
+
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	char*ptr1 = (char*)malloc(4);
+	char*ptr2 = (char*)malloc(4);
+	char*ptr3 = (char*)malloc(4);
+
+	for ( int i = 0; i < 200; i++ )
+	{
+		*(ptr2+i) = 0;
+	}
+
+
+	free ( ptr1 );
+	free ( ptr2 );
+	free ( ptr3 );
+
+	return 0;
+}
+```
+
+* allocate three blocks of memory on the heap using malloc(4), each capable of storing four characters.
+* Then, you have a loop that writes a zero into 200 consecutive memory locations, starting at ptr2
+* Because ptr2 only points to a block of 4 bytes, this loop writes well beyond the end of that block. This is known as a buffer overflow. The fact that you're writing 200 bytes means you're likely overwriting other data in the heap, including the blocks pointed to by ptr1 and ptr3, as well as potentially the heap's own management data.
+
+### **HeapCorruption Demo**
+
+```text
+Open the Executable
+    open the heap corruption exe 
+
+    > g
+        i got a crash
+    
+    > k 
+        the crash is happening exactly at the free ptr(ucrtbase!free)
+        - click main function stack frame to see local variables
+        - The free function is used to deallocate or free a block of memory that was 
+        previously allocated with malloc
+
+    > !analyze -v
+        there is a heap corruption(Failure Bucket Id)
+        - the first signature for heap corruption is the crash is happening on one of the 
+        heap functions,in this case it is RtlFreeHeap.(look in stack)
+        - You can see in additional debug text Enable Pageheap/AutoVerifer
+
+    > filepath> "gflags /p /enable HeapCorruption.exe full"
+        open filepath (C:/Program Files (x86)/Windows Kits/10/Debuggers/x86) run command prompt
+        use above command  to enable special heap debugging options for the specified executable
+
+    > .restart
+
+    > g
+        we can see the crash is happening(access violation)
+
+    > k
+        we can see crash is happening then and there itself
+        it is crashing right here in the main itself
+
+    > r 
+        we can see that there is a byte ptr copy is going on and the target is eax.
+
+    > !gflag
+        this will give us information about what is the heap flag we have enabled in gflags, 
+        where the page heap is enabled or not. So in this case we have hpa
+
+    > dv 
+        we can see the local variables
+
+    > r 
+        we can see that the local variable is nearby to eax ,where the crash is happening
+
+    > !address eax
+        we can see that, it is reserve 
+
+    > !address argv
+        argv from dv command
+        we can see that it is MEM_Commit
+        commit address is very close to crash address
 
     > qd
 ```
