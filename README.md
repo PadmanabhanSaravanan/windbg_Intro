@@ -2210,6 +2210,7 @@ Reconnect
 * [**02.AccessViolation**](#02.accessviolation)
 * [**03.HeapCorruption**](#03.heapcorruption)
 * [**04.Bad Exception Handler**](#04.bad-exception-handler)
+* [**05.NormalHang**](#05.normalhang)
 
 ## **01.Simple Crash**
 
@@ -2532,3 +2533,116 @@ Open Executable
 * It is causing an interrupt, as part of the interrupt handling,it is calling this particular user mode function from the kernel and finally the handler. That is how the interrupt handling works
 
 * why it is showing in the same stack, because this part of the code is executing in the context of exact same thread because of that, it is sharing the stack or the stack is same for this part of the code and this,that is why it is getting displayed in the same call stack. It doesn't mean that this function is calling this function.
+
+## **05.NormalHang**
+
+An application "hangs" when it becomes unresponsive to user input. There are various reasons why an application might hang, including but not limited to:
+
+* Deadlocks
+* Infinite loops
+* Heavy Processing
+* External Resource Usage
+* UI Thread Blocking
+
+[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/05.NormalHang)
+
+```python
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_COMMAND:
+        {
+            int wmId = LOWORD(wParam);
+            // Parse the menu selections:
+            switch (wmId)
+            {
+            case IDM_ABOUT:
+                Sleep(30000);
+                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+                break;
+            case IDM_EXIT:
+                DestroyWindow(hWnd);
+                break;
+            default:
+                return DefWindowProc(hWnd, message, wParam, lParam);
+            }
+        }
+        break;
+    case WM_PAINT:
+        {
+            PAINTSTRUCT ps;
+            HDC hdc = BeginPaint(hWnd, &ps);
+            // TODO: Add any drawing code that uses hdc here...
+            EndPaint(hWnd, &ps);
+        }
+        break;
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+    default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    return 0;
+}
+```
+
+In the above Example i will make the application to sleep or pause for 30,000 milliseconds, or 30 seconds. This is likely to cause a "hang" or unresponsive state, as it blocks the UI thread from processing other messages.
+
+### **NormalHang Demo**
+
+```text
+Open Executable:
+    open WindowsAppNormal executable(.exe)
+
+    > g
+        you can see that application as started.
+
+    > break manually
+
+    > ~*k 
+        - first command to execute is ~*k, we need to see all the threads and the stack
+         of all the threads
+        - click on the winmain frame,it is waiting for get message  USER32!GetMessageW
+            we can see in the stack
+    
+    > x WindowsAppNormal!*proc*
+        request to list all the symbols that contain the string "proc" in the 
+        module "WindowsAppNormal
+
+    > bp WindowsAppNormal!WndProc "dv /V;gc"
+        breakpoint on wndproc
+        
+    > g
+        we can see the message that are passing when we move cursor on the app
+
+    > qd
+
+Run WindowsApp Normal application
+    - click on help and select about the about the application gets hung
+    - while clicking on about it is gonna sleep for 30 sec and send message to 
+        the winproc , so the application hang.
+    - still that 30 sec there will not contact with winproc function
+    - Now application Hang quickly attach to the windbg / we can take dump
+    - for hang application WER will not work so we have to take dump manually
+    - we can use procdump / attach and take it in windbg
+
+Attach the process
+    attach the hang application to windbg(i.e., WindowsAppNormal)
+
+    > ~*k 
+        - first command to execute is ~*k, we need to see all the threads and the stack
+         of all the threads.
+        - for hang application or dump !analyze -v does not properly
+        - In stack you can see that winmain is calling dispatch message and ultimately 
+        getting called winproc.Having the winproc on the stack itself is a suspicious sign.
+        - the top of the stack is sleepy x.
+
+    > ~*kvn
+        for more details.
+
+    > ?<sleep_address>
+        sleep_address from the stack argument to see how many seconds it id gonna sleep
+```
+
+The windows will generate messages to the message pump and that messages has to be processed by the winproc in a timely manner. So if that is not happening that window will be marked as hung, the clicks the keyboard interrupt all will be stuck and the application looks unresponsive. Instead of this sleep, this could be anything, it can be wait for a lock, it could be wait for a event, it could be wait for single object,it could be anything, other than functions which process messages.
