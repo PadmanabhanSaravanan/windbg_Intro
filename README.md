@@ -2089,7 +2089,46 @@ Open Executable:
 
 ```
 
-# Remote Debugging
+# Remote Debugging Visual Studio
+
+Remote debugging is a feature in Visual Studio that allows you to run and debug code on a different machine than where Visual Studio is running. You might use remote debugging to debug a problem on a production server, a user's machine, or a test machine without having to install a full version of Visual Studio in those environments.
+
+* [**Install the Remote Tools on the Target Machine**](#install-the-remote-tools-on-the-target-machine)
+* [**Configure the Remote Debugger**](#configure-the-remote-debugger)
+* [**Attach to the Remote Process**](#attach-to-the-remote-process)
+
+## **Install the Remote Tools on the Target Machine**
+
+* On the machine where the application you want to debug is running, download and install the appropriate version of Remote Tools for Visual Studio from the official Microsoft website. The version should match the version of Visual Studio on your host machine.
+
+* [click on link to download remote tool](https://visualstudio.microsoft.com/downloads/#remote-tools-for-visual-studio-2022)
+
+![Windbg-Intro](image/img95.png)
+
+## **Configure the Remote Debugger**
+
+The first time you start the remote debugger (or before you have configured it), the Remote Debugging Configuration dialog box appears.
+
+![Windbg-Intro](image/img96.png)
+
+* If the Windows Web Services API is not installed, which happens only on Windows Server 2008 R2, select the Install button.
+* Select at least one network type you want to use the remote tools on. If the computers are connected through a domain, you must choose the first item. If the computers are connected through a workgroup or homegroup, choose the second or third item as appropriate.
+* Select Configure remote debugging to configure the firewall and start the remote debugger.
+* When configuration is complete, the Remote Debugger window appears.
+
+![Windbg-Intro](image/img97.png)
+
+* The remote debugger is now waiting for a connection. Use the server name and port number shown to set the remote connection configuration in Visual Studio.
+
+## **Attach to the Remote Process**
+
+Back in Visual Studio on your host machine, go to **"Debug" > "Attach to Process"**. In the **"Connection target"** field, enter the name or IP address of the target machine. You should then see a list of processes running on the target machine. Select the process of your application and click "Attach".
+
+![Windbg-Intro](image/img98.png)
+
+
+
+# Remote Debugging Windbg
 
 WinDbg is a multipurpose debugger for the Microsoft Windows computer operating system, distributed by Microsoft. Debugging Tools for Windows supports debugging of applications, services, drivers, and the Windows kernel.
 
