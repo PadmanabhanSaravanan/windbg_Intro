@@ -2212,6 +2212,7 @@ Reconnect
 * [**04.Bad Exception Handler**](#04.bad-exception-handler)
 * [**05.NormalHang**](#05.normalhang)
 * [**06.Deadlock**](#06.deadlock)
+* [**07.Mutex**](#07.mutex)
 
 ## **01.Simple Crash**
 
@@ -2743,4 +2744,77 @@ Open Executable
 
     > !locks
         we can even use this command to see which thread is locked.
+```
+
+## **07.Mutex**
+
+Mutual Exclusion (mutex) is a program object that prevents multiple threads from accessing the same shared resource simultaneously. A shared resource in this context is a code element with a critical section, the part of the code that should not be executed by more than one thread at a time.
+
+[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/07.Mutex)
+
+* In the given example, two threads are created and each attempts to write to a hypothetical database. The access to the database is controlled by a mutex, ghMutex. This mechanism ensures that only one thread at a time can write to the database.
+* However, in the WriteToDatabase function, there is a Sleep(30000) function call that causes the current thread to sleep for 30000 milliseconds (or 30 seconds) while holding the mutex. This is problematic because the other thread will be blocked for this duration, waiting for the mutex to be released and this application slow and we will see how it will look windbg.
+
+### **Mutex Demo**
+
+```text
+Run Mutex Application
+    we can see that application is to slow
+
+    > Attach to process
+        load mutex to analyze
+
+    > ~*k
+        first we will see that what is your main thread doing and it is waiting for multiple objects.
+        we will see what are the objects it is waiting for.
+
+    > ~0s
+        switching into main thread.
+
+    > kvn
+        we will take the starting address which is waiting for objects.
+
+    > dc address L2
+        gives the object that are waiting 2 dwords
+
+    > !handle address 0xf
+        address : first dword
+        we can see the object is thread and we will see what is thread doing
+
+    > ~~[thread_id]s
+        switching into the thread
+
+    > k
+        we can see that thread is in sleep.
+
+    > kvn 
+        take first address of the sleep
+
+    > ?address
+        we can see that it is in sleep mode for 30sec.
+
+    > !handle address 0xf
+        address : 2nd dword
+        it will give thread id and status
+
+    > ~~[thread.id]s
+        switch into the thread
+
+    > k
+        we can see the thread is waiting for single object.
+
+    > kvn
+        we will see what is it waiting on.
+
+    > !handle address 0xf
+        we can see that object is mutant.
+        we will see who is owning mutant.
+
+    > ~~[thread.id]s
+        switching into thread
+    
+    > k
+        we can see that owining thread is sleeping.
+
+    > qd
 ```
