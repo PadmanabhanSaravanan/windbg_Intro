@@ -2211,6 +2211,7 @@ Reconnect
 * [**03.HeapCorruption**](#03.heapcorruption)
 * [**04.Bad Exception Handler**](#04.bad-exception-handler)
 * [**05.NormalHang**](#05.normalhang)
+* [**06.Deadlock**](#06.deadlock)
 
 ## **01.Simple Crash**
 
@@ -2646,3 +2647,100 @@ Attach the process
 ```
 
 The windows will generate messages to the message pump and that messages has to be processed by the winproc in a timely manner. So if that is not happening that window will be marked as hung, the clicks the keyboard interrupt all will be stuck and the application looks unresponsive. Instead of this sleep, this could be anything, it can be wait for a lock, it could be wait for a event, it could be wait for single object,it could be anything, other than functions which process messages.
+
+## **06.Deadlock**
+
+A deadlock is a specific condition where two or more tasks are unable to progress because each is waiting for the other to release a resource. Deadlocks can occur in many different contexts, including multiprocessing, multithreading, and distributed systems.
+
+[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/06.DeadLock)
+
+Example: 
+
+* Process 1 holds Resource 1 and requests Resource 2.
+* Process 2 holds Resource 2 and requests Resource 1.
+
+![Windbg-Intro](image/img101.PNG)
+
+### **Deadlock Demo**
+
+```text
+Open Executable
+    open deadlock executable (.exe)
+
+    > g
+        we can see that program is not printing anything on console.
+
+    > break manually
+
+    > ~*k
+        main thread is waiting on multiple objects(KERNELBASE!WaitForMultipleObjects)
+        
+    > ~*kvn
+        take the starting address of ERNELBASE!WaitForMultipleObjects and we will 
+        see what is it waiting for.
+
+    > dc address L2
+        we will dump to check what is the object it is waiting for
+        we will get the object address
+
+    > !handle address 0xf
+        address - object first address from dc command
+        we can see that it is waiting for a thread.
+        we will get thread id (example 6bb8.6a14, where 6bb8 is process id and
+        6a14 is thread id)
+
+    > |
+        to check process id is correct
+
+    > ~
+        to which thread it is waiting for
+
+    > !handle address 0xf
+        address - object second address from dc command
+
+    > ~~[thread_id]s
+        we will switch into thread and see what the thread is doing.
+
+    > k 
+        what this particular thread is doing
+        thread is waiting to enter into a critical session
+        we will see even what the other thread is doing.
+
+    > ~~[thread_id]s
+        swithched into other thread
+
+    > k 
+        we will check what it is doing
+        the both threads are similar and even this waiting to enter
+        critical session.
+        next we will find out what that thread is doing by owning the critical session.
+
+    > ~*kvn
+        i will take the critical session argument address(ntdll!RtlEnterCriticalSection)
+
+    > !cs address
+        this is a command to dump out the critical session inside a process
+        we will get the owning thread id and we will see who is the owner
+    
+    > ~~[thread.id]s
+        we will switch into the thread which is owning.
+
+    > kvn  
+        we can see which function is owning a thread
+        and it is even trying to enter critical section and we will see
+        who is owning and other lock ,where this thread trying to enter
+
+    > !cs address
+        address : critical session argument address(ntdll!RtlEnterCriticalSection)
+        we will get owning thread id
+    
+    > ~~[thread.id]s
+        switching into thread 
+
+    > kvn
+        we can see that both functions owning the lock and waiting for thread to release
+        this scenario is know as deadlock.
+
+    > !locks
+        we can even use this command to see which thread is locked.
+```
