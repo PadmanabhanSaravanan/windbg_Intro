@@ -2818,3 +2818,117 @@ Run Mutex Application
 
     > qd
 ```
+
+# Debugging Managed Code .NET
+
+Debugging managed code in the .NET Framework involves using tools and features designed specifically for the .NET runtime. 
+
+**Example: Simple Crash**
+
+```c
+namespace HelloWorld
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+            throw new Exception("Test");
+        }
+    }
+}
+```
+
+* It prints the string "Hello World!" to the console.
+* It then throws an exception with the message "Test".
+
+The throw new Exception("Test") line will cause the application to terminate abruptly because the exception is unhandled. When an exception is thrown and not caught by any enclosing catch block, it is considered an unhandled exception, and by default, causes the application to terminate.
+
+* [**Generate an error report .NET**](#generate-an-error-report-.net)
+* [**Debugging Managed Code .NET Demo**](#debugging-managed-code-.net-demo)
+
+## **Generate an error report .NET**
+
+* we will set path to save the crash dump using windows error reporting.
+
+* open run app and type ‘regedit’, this command will open register editor.
+
+![Windbg-Intro](image/img87.PNG)
+
+* Go to this file path `Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting`
+
+![Windbg-Intro](image/img88.PNG)
+
+* Create a new folder LocalDumps in windows error reporting folder(**right click on Windows Error Reporting -> New -> Key**)
+
+![Windbg-Intro](image/img89.PNG)
+
+* Create dump folder in LocalDumps by **right click on LocalDumps -> New -> Expandable String Value**. name it has DumpFolder and **right click on DumpFolder -> Modify -> In Value data** specify the file path to save the dump and click OK.
+
+![Windbg-Intro](image/img90.PNG)
+
+* Create dump type in LocalDumps by **right click on LocalDumps -> New -> DWORD** and name it has DumpType and **right click on DumpFolder -> Modify -> In Value data** specify the number 2.
+
+![Windbg-Intro](image/img91.PNG)
+
+## **Debugging Managed Code .NET Demo**
+
+```text
+Run the Helloworld exe
+    the helloworld application will print helloworld and terminates automatically
+    Dump will be created in specified path
+
+Open Crash Dump
+    open dump which is create while application crash
+
+    > ~*k
+        to see the stack of all the threads
+        In stack we can see clr handler so we need to load the .NET extension
+
+    > .loadby SOS clr
+        this command will load .net extension for debugging managed code 
+
+    > ~*e!clrstack
+        will load managed call stacks for all threads
+
+    > !dso
+        all the managed objects found on the stack of the current thread
+        we can see the exception object
+
+    > !pe address
+        address - address of the exception object.
+        prints the details of a specific exception
+        we can see the message coming from exception object
+        click on the exception address we can see the raw dump.
+
+    > !do address
+        address - address of the message object from the raw dump
+        it dumps a representation of a managed object at that memory address.
+```
+
+**why we need to load SOS.dll?**
+
+* The .loadby sos clr command in WinDbg is used to load the SOS debugging extension. The SOS debugging extension (SOS.dll) helps you debug managed programs in WinDbg by providing information about the internal common language runtime (CLR) environment.
+* If you don't load the SOS debugging extension with .loadby sos clr, you won't be able to use the SOS commands that provide insights into the managed .NET aspects of the dump you're investigating. This includes inspecting managed objects, call stacks, exceptions, threading information, and more.
+* Without the SOS extension, you'll be limited to the native debugging capabilities of WinDbg, which won't provide as much valuable information for debugging managed .NET applications.
+
+**~*****e!clrstack**
+
+* The ~*e!clrstack command in WinDbg is a powerful way to view managed call stacks for all threads in a .NET application.
+* This command is particularly useful when debugging issues like deadlocks or race conditions where you need to see what all threads in the application were doing at a certain point in time.
+
+**!dso**
+
+* The !dso command in WinDbg, where dso stands for "DumpStackObjects", is part of the SOS debugging extension used for debugging managed code in .NET applications.
+* When you run !dso, it enumerates all the managed objects found on the stack of the current thread. This includes method parameters, local variables, and any temporary objects that .NET is using internally on that thread.
+
+**!pe address**
+
+* The !pe command in WinDbg, where pe stands for "PrintException", is part of the SOS debugging extension used for debugging managed code in .NET applications.
+* When you run !pe, it prints the details of the last exception on the current thread, if there is one. The information includes the exception type, message, and stack trace, among other things.
+* You can also use !pe with an exception object's address to print the details of a specific exception, like so: !pe <address>.
+
+**!do address**
+
+* The !do command in WinDbg stands for "DumpObject". It's part of the SOS debugging extension, which is used for debugging managed code in .NET applications.
+* When you run !do followed by an address, it dumps a representation of a managed object at that memory address. The output includes the object's type, size, and value for each field in the object.
