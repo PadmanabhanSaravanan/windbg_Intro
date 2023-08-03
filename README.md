@@ -2177,6 +2177,8 @@ Select **OK**.
 
 Kernel mode debugging allows you to debug the Windows operating system itself, which can be invaluable when diagnosing certain types of problems like driver issues, system crashes (Blue Screen of Death), and performance problems at the OS level.
 
+[refer this link for kernel debugging using VM](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/attaching-to-a-virtual-machine--kernel-mode-)
+
 * [**Configure VirtualBox for Debugging**](#configure-virtualbox-for-debugging)
 * [**Connect WinDbg**](#connect-windbg)
 
