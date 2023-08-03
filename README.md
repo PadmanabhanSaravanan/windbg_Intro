@@ -2089,7 +2089,12 @@ Open Executable:
 
 ```
 
-# Remote Debugging Visual Studio
+# Remote Debugging
+
+* [**Remote Debugging Visual Studio**](#remote-debugging-visual-studio)
+* [**Remote Debugging Windbg**](#remote-debugging-windbg)
+
+## **Remote Debugging Visual Studio**
 
 Remote debugging is a feature in Visual Studio that allows you to run and debug code on a different machine than where Visual Studio is running. You might use remote debugging to debug a problem on a production server, a user's machine, or a test machine without having to install a full version of Visual Studio in those environments.
 
@@ -2097,7 +2102,7 @@ Remote debugging is a feature in Visual Studio that allows you to run and debug 
 * [**Configure the Remote Debugger**](#configure-the-remote-debugger)
 * [**Attach to the Remote Process**](#attach-to-the-remote-process)
 
-## **Install the Remote Tools on the Target Machine**
+### **Install the Remote Tools on the Target Machine**
 
 * On the machine where the application you want to debug is running, download and install the appropriate version of Remote Tools for Visual Studio from the official Microsoft website. The version should match the version of Visual Studio on your host machine.
 
@@ -2105,7 +2110,7 @@ Remote debugging is a feature in Visual Studio that allows you to run and debug 
 
 ![Windbg-Intro](image/img95.png)
 
-## **Configure the Remote Debugger**
+### **Configure the Remote Debugger**
 
 The first time you start the remote debugger (or before you have configured it), the Remote Debugging Configuration dialog box appears.
 
@@ -2120,15 +2125,13 @@ The first time you start the remote debugger (or before you have configured it),
 
 * The remote debugger is now waiting for a connection. Use the server name and port number shown to set the remote connection configuration in Visual Studio.
 
-## **Attach to the Remote Process**
+### **Attach to the Remote Process**
 
 Back in Visual Studio on your host machine, go to **"Debug" > "Attach to Process"**. In the **"Connection target"** field, enter the name or IP address of the target machine. You should then see a list of processes running on the target machine. Select the process of your application and click "Attach".
 
 ![Windbg-Intro](image/img98.png)
 
-
-
-# Remote Debugging Windbg
+## **Remote Debugging Windbg**
 
 WinDbg is a multipurpose debugger for the Microsoft Windows computer operating system, distributed by Microsoft. Debugging Tools for Windows supports debugging of applications, services, drivers, and the Windows kernel.
 
@@ -2410,6 +2413,13 @@ Open Executable
 
     > k 
         to see the stack
+
+    > kf
+        having one more information is that each frame, how much is the size of each frame
+        kf to understand who is taking more memory on the stack, which frame
+        this kf is very useful, just like any other, you can go into the code and see how the recursion happens 
+        and who is allocating on the stack (clicking on the frame)
+
 ```
 
 ## **04.Bad Exception Handler**
