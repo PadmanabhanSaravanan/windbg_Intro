@@ -2492,7 +2492,7 @@ The program creates a null pointer ptr and attempts to dereference(To access the
 
 ```text
 Open Executable
-    open stackoverflow executable.
+    open badexceptionhandler executable.
 
     > g
         continue and throws access violation
@@ -2512,9 +2512,9 @@ Open Executable
 
     > !exchain
         to see the different exception handlers available
-        OstrichOnStage!_except_handler4 this is exception handler from the program.
+        BadExceptionHandler!_except_handler4 this is exception handler from the program.
 
-    > bp OstrichOnStage!_except_handler4
+    > bp BadExceptionHandler!_except_handler4
         put breakpoint on the exception handler
 
     > g
