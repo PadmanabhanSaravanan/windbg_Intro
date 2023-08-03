@@ -2093,6 +2093,7 @@ Open Executable:
 
 * [**Remote Debugging Visual Studio**](#remote-debugging-visual-studio)
 * [**Remote Debugging Windbg**](#remote-debugging-windbg)
+* [**Kernel Mode Debugging Windbg**](#kernel-mode-debugging-windbg)
 
 ## **Remote Debugging Visual Studio**
 
@@ -2171,6 +2172,35 @@ tcp:Port=5005,Server=YourHostComputer
 where YourHostComputer is the name of your host computer, which is running the debugging server.
 
 Select **OK**.
+
+## **Kernel Mode Debugging Windbg**
+
+Kernel mode debugging allows you to debug the Windows operating system itself, which can be invaluable when diagnosing certain types of problems like driver issues, system crashes (Blue Screen of Death), and performance problems at the OS level.
+
+* [**Configure VirtualBox for Debugging**](#configure-virtualbox-for-debugging)
+* [**Connect WinDbg**](#connect-windbg)
+
+### **Configure VirtualBox for Debugging**
+
+* Shut down the VM, and in VirtualBox, select the VM and go to 'Settings'.
+* Go to the 'Serial Ports' section. Here, enable a serial port and set the 'Port Mode' to 'Host Pipe'.
+* Check the 'Create Pipe' option, and for the 'Port/File Path', provide a path for the named pipe. The format can be something like \\.\pipe\mypipe.
+* Click 'OK' to save the settings.
+
+![Windbg-Intro](image/img99.PNG)
+
+### **Connect WinDbg** 
+
+On your host machine, start WinDbg and select 'Kernel Debug'. In the COM tab, enter the pipe name in the 'Pipe' field and check the 'Reconnect' box. The settings should look something like:
+
+```markdown
+Baud Rate: 115200
+Resets: 0
+Pipe: \.\pipe\mypipe
+Reconnect
+```
+
+![Windbg-Intro](image/img100.PNG)
 
 # Use Cases
 
