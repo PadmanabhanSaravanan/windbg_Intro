@@ -3024,3 +3024,128 @@ Open Crash Dump
 
 * The !do command in WinDbg stands for "DumpObject". It's part of the SOS debugging extension, which is used for debugging managed code in .NET applications.
 * When you run !do followed by an address, it dumps a representation of a managed object at that memory address. The output includes the object's type, size, and value for each field in the object.
+
+# Summary 
+
+**Commands** <!-- style="font-size:25px" -->
+
+**1. analyze**
+
+* `!analyze`: This performs an automatic analysis of the current exception or bug check.
+* `!analyze -v`: This performs verbose analysis, providing more detailed output. 
+
+**2. Thread**
+
+The ~ command in WinDbg is used for thread manipulation and inspection. It can list all threads in a process, switch between threads, freeze and thaw threads, and much more. 
+
+* `~`: Lists all threads in the current process.
+* `~*`: Applies a command to all threads. For example, ~*k displays a stack trace for each thread.
+* `~N s`: Switches the debugger context to the specified thread N.
+* `~N f`: Freezes the specified thread N. It won't run when you execute the g (go) command.
+* `~N u`: Unfreezes the specified thread N. It will run when you execute the g (go) command.
+* `~~[ThreadID]s`: Switches the debugger context to the thread with the specified thread ID.
+* `~N kd`: Sets default register context to the specified thread N.
+* `~* kv`: Displays a call stack with frame numbers and return addresses for all threads.
+* `~N k`: Displays a call stack for the specified thread N.
+
+**3. Stack Trace**
+
+The k command in WinDbg are used to display a stack trace.
+
+* `k`: Displays a basic stack trace. Each line shows a single stack frame with the return address, the function name, and the source line if the symbols are loaded properly.
+* `kb`: Displays a stack trace with the parameters to the functions. This command is very useful when trying to understand what values were passed to the function when the program crashed or hanged.
+* `kc`: Just like kb but omits the first column that represents the frame numbers.
+* `kd`: Similar to kb but only displays the return addresses in the call stack.
+* `kp`: Displays the stack frame, return address, function name, source file name, and line number within the source file, and parameters passed to the functions.
+* `kP`: Similar to kp but displays the stack frame pointer instead of the frame number.
+* `kv`: Similar to kp, but also displays the local variables in each stack frame.
+* `kvn`: Similar to kv but includes the frame number in hexadecimal format, as well as the displacement from the start of the function to the point of execution.
+* `kf`: Displays a stack trace along with the size of the parameters in bytes.
+
+**4. Resume execution**
+
+* `g`: Resumes execution of the program. If no breakpoints are hit, the program will run to completion or until an exception occurs.
+* `gu`: Go up. Continues execution and breaks at the return from the current function.
+* `gc`: It's used to continue execution of the program after it's been halted at a breakpoint.
+
+**5. Breakpoint**
+
+* `bp`: This command is used to set a breakpoint at a specific location in the code. Variations:
+* `bp module!function`: Sets a breakpoint at a specific function.
+* `bp module!function "commands"`: Sets a breakpoint and executes specified commands when the breakpoint is hit.
+* `bu`: Sets an unresolved breakpoint, which is resolved each time it's hit.
+* `bl`: This command lists all breakpoints. No variations.
+* `bm`: This command sets a breakpoint on all functions that match a specified pattern.
+* `ba`: This command sets a breakpoint on access (read/write) to a specified memory 
+* `be`: This command enables a breakpoint that has been previously disabled.
+* `bd`: This command disables a breakpoint, but does not remove it.
+* `bc`: This command clears a breakpoint.
+
+**6. Memory**
+
+* **dd, da, du, dc**: These commands are used to inspect the contents of memory at a specific address.
+* `dd Address L?Length`: Displays memory as double words (32 bits).
+* `da Address L?Length`: Displays memory as ASCII.
+* `du Address L?Length`: Displays memory as Unicode.
+* `dc Address L?Length`: Displays memory as hex and ASCII.
+* `dps Address L?Length`: Displays pointer-sized values with symbols.
+
+**7. Variavles**
+
+`dv`: This command displays local variables and parameters. Variations:
+
+* `dv /t`: Displays the type of variables.
+* `dv /v`: Displays the value of variables.
+* `dv /i`: Displays the type information for variables.
+
+`dt`: This command displays a local or global variable, or a data type.
+
+**8. Registers**
+
+* `r`: The r command without any arguments displays the content of all registers.
+* `rm`: This command modifies the value of one or more registers.
+* `r <register_name>`: This command followed by a specific register name will show the content of that register.
+
+**9. Symbols**
+
+* `.reload:` This command reloads symbol information. 
+* `.reload /f`: Forces an immediate symbol reload, regardless of the timestamp.
+* `.reload /v`: Verbose mode.
+* `ln`: Displays the list the nearest symbols to an address.
+* `x:` command examines symbols.
+* `.sympath`: This command sets or displays the symbol path.
+* `.symfix`: This command sets the symbol path to the default Microsoft Symbol Server path.
+* `!sym noisy`: This command enables noisy symbol loading which will output detailed information about the debugger's search for symbols.
+* `!sym quiet`: This command disables noisy symbol loading.
+* `.sympath+`: This command adds a new path to the existing symbol path.
+
+**10. Debugger Extensions**
+
+* `!peb`: This command displays the Process Environment Block (PEB) of a process.
+* `!heap`: This command is used to display information about a process heap, which can be useful for tracking down memory leaks or heap corruption.
+* `!locks`: This command can display information about locks in the system, which can be useful for debugging deadlock situations.
+* `.load / .unload`: These commands load or unload a specific debugger extension DLL.
+* `.chain`: Displays a list of all loaded debugger extensions.
+
+**11. Editing Memory**
+
+* `eb`: Edit memory in bytes.
+* `ew`: Edit memory in words (2 bytes).
+* `ed`: Edit memory in double words (4 bytes).
+* `eq`: Edit memory in quad words (8 bytes).
+* `ea`: Edit memory in ASCII.
+* `eu`: Edit memory in Unicode.
+
+**12. Search**
+
+* `s`: Search memory for a specific byte.
+* `sa`: Search memory for an ASCII string.
+* `su`: Search memory for a Unicode string.
+* `sd`: Search memory for a specific doubleword. 
+* `sq`: Search memory for a specific quadword.
+
+**13. Stepping Techniques**
+
+* `t`: execute a single instruction and then pause, also known as "step into".
+* `p`: execute a single line or instruction in your code, also known as "step over".
+* `gu`: executes until the current function is complete and returns,also known as "step out".
