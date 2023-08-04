@@ -1,6 +1,91 @@
-# Debugger Commands
+# Windbg
 
-**Table of Content**
+![windbg](image/img103.png)
+
+# Table of Contents
+
+* [**WindBg Introduction**](#windbg-introduction)
+* [**Debugger Commands**](#debugger-commands)
+* [**Additional Breakpoints**](#additional-breakpoints)
+* [**Call Stack and Thread Analysis**](#call-stack-and-thread-analysis)
+* [**Assembly Language**](#assembly-language)
+* [**Exception Handling**](#exception-handling)
+* [**Remote Debugging**](#remote-debugging)
+* [**Use Cases**](#use-cases)
+* [**Debugging Managed Code .NET**](#debugging-managed-code-.net)
+* [**Summary**](#summary)
+
+# WindBg Introduction
+
+* [**What is Debugging?**](#what-is-debugging?)
+* [**What is Windbg**](#what-is-windbg)
+* [**Installing and configuring the Windows SDK**](#installing-and-configuring-the-windows-sdk)
+* [**Launching applications with WinDBG**](#launching-applications-with-windbg)
+
+## **What is Debugging?**
+
+Debugging is the process of identifying, isolating, and fixing problems or errors in computer programs. These issues, commonly known as bugs, can include anything from minor errors that cause a program to behave incorrectly, to major issues that prevent a program from running at all.
+
+**Debugging involves several steps:**
+
+* **Problem Identification**: The first step in the debugging process is to recognize that a problem exists. This might be due to a program crash, unexpected behavior, incorrect output, or other issues.
+
+* **Problem Isolation**: Once the problem is identified, the next step is to isolate where in the code the problem is occurring. This could involve examining program outputs, reading error messages, or reproducing the steps that led to the issue.
+
+* **Problem Analysis**: After the issue has been isolated to a specific part of the program, it needs to be analyzed. This can involve examining the program's code, understanding what the code is supposed to do versus what it is actually doing, and why that might be the case.
+
+* **Resolution and Testing**: Once the cause of the problem is understood, a solution can be devised and implemented. After the solution has been implemented, it's necessary to test the program again to ensure the problem has been resolved and that the changes haven't introduced new issues.
+
+![windbg](image/img102.png)
+
+## **What is Windbg**
+
+WinDbg is a multipurpose debugger for the Microsoft Windows operating system, distributed by Microsoft. It is a powerful tool that is used to debug kernel-mode and user-mode code, analyze crash dumps, and examine the CPU registers while the code executes.
+
+**WinDbg supports debugging of:**
+
+* Applications and services on Windows.
+* Kernel-mode code on Windows.
+* Direct memory dump analysis (including post-mortem debugging).
+
+## **Installing and configuring the Windows SDK**
+
+WinDbg is part of the Debugging Tools for Windows, and you can get it by installing the Windows Software Development Kit (SDK).
+
+**1. Download the Windows Software Development Kit (SDK)**
+
+Visit the official Microsoft website and download the SDK installer.[click here](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/)
+
+![windbg](image/img104.PNG)
+
+**2. Run the SDK Installer**
+
+Start the installer. Specify file path to install Windows SDK.
+
+![windbg](image/img105.PNG)
+
+**3. Choose Debugging Tools for Windows**
+
+During installation, you'll be asked to select the features you want to install. Make sure to check the box for "Debugging Tools for Windows". You can uncheck all other boxes if you only need the Debugging Tools.
+
+![windbg](image/img106.PNG)
+
+**4. Install**
+
+Click Install and the Windows SDK will be installed.
+
+Once installed, you can find WinDbg in the start menu or in the installation directory (typically, C:\Program Files (x86)\Windows Kits\10\Debuggers).
+
+We can even install WinDbg Preview from the Microsoft Store, which has a more modern UI and some additional features. The URL is: [click here](https://www.microsoft.com/en-us/p/windbg/9pgjgd53tn86)
+
+## **Launching applications with WinDBG**
+
+* Go to your installation directory or start menu type windbg and open WinDbg.exe.
+* On the File menu, select Open Executable. In the Open Executable dialog, go to the folder that contains notepad.exe. (The notepad.exe file usually is in C:\Windows\System32.) For File name, enter notepad.exe. Select Open.
+
+![windbg](image/img107.PNG)
+
+# Debugger Commands
 
 * [**Help command**](#help-command)
 * [**!analyze -v command**](#!analyze-v-command)
@@ -2213,7 +2298,7 @@ Reconnect
 * [**05.NormalHang**](#05.normalhang)
 * [**06.Deadlock**](#06.deadlock)
 * [**07.Mutex**](#07.mutex)
-* [**08.HeapCorruption**]
+* [**08.HeapCorruption**](#08.heapcorruption)
 
 ## **01.Simple Crash**
 
