@@ -13,6 +13,7 @@
 * [**Remote Debugging**](#remote-debugging)
 * [**Use Cases**](#use-cases)
 * [**Debugging Managed Code .NET**](#debugging-managed-code-.net)
+* [**Best Practices and Tools**](#best-practices-and-tools)
 * [**Summary**](#summary)
 
 # WindBg Introduction
@@ -3354,7 +3355,7 @@ Integrating debugging into your development workflow with WinDbg can help you id
     * When an issue is encountered, initiate debugging immediately by launching WinDbg and loading the appropriate dump file.
 
 7. **Symbol Resolution:**
-    
+
     * Ensure symbol paths are configured to fetch symbols from your organization's symbol server or other relevant sources.
 
 8. **Automated Scripts:**
