@@ -2383,6 +2383,66 @@ An Access Violation, also known as a segmentation fault, is a specific kind of e
 
 ![Windbg-Intro](image/img94.png)
 
+**How to enable release mode array bound checks:** <!-- style="font-size:25px" -->
+
+In Microsoft Visual Studio, the "/RTC1" option, which includes array bounds checking, is used in debug mode and not in release mode. By default, array bounds checks are disabled in release mode to improve performance.
+
+If you want to enable array bounds checks specifically for release mode, you can use the _ASSERTE macro, which performs array bounds checks regardless of the build mode. _ASSERTE is used to perform runtime checks in your code, and it can help you catch array bounds errors during testing and development. However, please keep in mind that this may not be as efficient as the optimizations done by the compiler in debug mode.
+Here's how you can use _ASSERTE:
+#include <assert.h>
+
+```c
+int main() {
+    int a[10] = { 0 };
+    int b = 111111111111111;
+    
+    // Perform array bounds check using _ASSERTE
+    _ASSERTE(b >= 0 && b < 10);
+    
+    a[b] = 100;
+    return 0;
+}
+```
+
+**Here are some strategies to help you debug the release version of your code in Windbg:**
+
+1.	Generate Symbol Files: Make sure you have generated symbol (.pdb) files for your release build. Symbol files contain information about the source code and the binary, which helps in debugging. When compiling your release build, enable the generation of symbol files and keep them alongside your binary executable.
+
+2.	Load Symbols in Windbg: Before analyzing the release version in Windbg, load the symbol files using the .symfix and .reload commands. The .symfix command sets the symbol path, and .reload reloads the symbols for the release version.
+
+3.	Enable Debugging Information: If possible, consider building your release version with debugging information enabled (/Zi for MSVC or -g for GCC). This will include additional debugging information in the binary, making it easier to understand the call stack and variable values during debugging.
+
+4.	Use Source Code and Disassembly: Use the u (unassemble) command in Windbg to disassemble the code at specific addresses. Compare the disassembled code with the corresponding source code to understand the execution flow better. You can also use the u command with symbols to view disassembly with source lines interleaved.
+
+5.	Set Breakpoints and Trace Execution: Set breakpoints at critical points in your code using the bp command. You can trace the execution of the program by using the g (go) command to continue execution until a breakpoint is hit. Use the p command to step through the code one instruction at a time.
+
+6.	Inspect Memory: Use the d, dd, dq, or du commands to inspect memory and variables at various points during program execution. This can help you understand the values of variables and detect potential issues.
+
+7.	Analyze Crash Dumps: If your release version crashes and generates a dump file, you can load the dump file in Windbg and analyze the call stack, registers, and memory to pinpoint the cause of the crash.
+
+Remember that debugging optimized release code can be more challenging due to various compiler optimizations, inlining, and code reordering. It may require a deeper understanding of the assembly-level code and the specific optimizations applied during compilation. Additionally, keep backups of the original release build and symbol files to ensure you can return to the unmodified code if needed.
+
+**How can I generate symbol files in msvc** <!-- style="font-size:25px" -->
+
+To generate symbol files (also known as PDB files) for a release build in Microsoft Visual Studio (MSVC), you need to ensure that your release build configuration includes the necessary settings to generate debug information. Debug information is what gets stored in the symbol files and is essential for effective debugging. Here's how you can generate symbol files for a release build in MSVC:
+
+1.	Open Project Properties: Open your project in Visual Studio, and from the "Solution Explorer," right-click on your project and select "Properties."
+
+2.	Select Release Configuration: In the project properties window, make sure you have selected the "Release" configuration from the top drop-down menu. This is the configuration for which you want to generate the symbol files.
+
+3.	Enable Debug Information: In the project properties window, go to "Configuration Properties" > "C/C++" > "General." Set the "Debug Information Format" option to "Program Database (/Zi)." This option tells the compiler to generate debug information in a PDB file.
+
+4.	Set Output Path for PDB Files: In the same project properties window, go to "Configuration Properties" > "Linker" > "Debugging." Set the "Generate Debug Info" option to "Yes (/DEBUG)." Also, specify the output directory for the generated PDB files using the "Program Database File Name" option.
+
+5.	Disable Optimizations (Optional): For better debugging experience, you may want to disable certain optimizations that can make debugging more challenging. In the project properties window, go to "Configuration Properties" > "C/C++" > "Optimization," and set the "Optimization" option to "Disabled (/Od)."
+
+6.	Build the Project: After configuring the project properties, build your project in the "Release" configuration. The PDB files will be generated in the specified output directory.
+
+7.	After building the release build with the above settings, you will have the necessary symbol files (PDB files) alongside your release executable. These PDB files contain debug information, which is essential for debugging the release build effectively.
+
+Please keep in mind that including debug information in a release build will increase the size of the binary and may affect performance. Therefore, it is essential to securely manage the generated PDB files and avoid distributing them with your release package. Keep the PDB files safe in a controlled and secure environment and use them for debugging purposes only when necessary.
+
+
 ### **AccessViolation demo1**
 
 ```c
@@ -2996,6 +3056,73 @@ Open the Executable
     > qd
 ```
 
+# Kernel Mode Use Cases
+
+* [**09.WindowsLogonUI**](#09.windowslogonui)
+
+## **09.WindowsLogonUI**
+
+In this demo what we're going to do is, we're going to print the password of Windows logon into the kernel debugger, so whenever someone types the password on the desktop to log on,that password will get displayed to the attached kernel debugger.
+
+**Configure VirtualBox for Debugging** <!-- style="font-size:25px" -->
+
+* Shut down the VM, and in VirtualBox, select the VM and go to 'Settings'.
+* Go to the 'Serial Ports' section.Here, enable a serial port and set the 'Port Number' to 'COM1'.
+* Go to the 'Serial Ports' section. Here, set the 'Port Mode' to 'Host Pipe'.
+* Check the 'Create Pipe' option, and for the 'Port/File Path', provide a path for the named pipe. The format can be something like \\.\pipe\mypipe.
+* Click 'OK' to save the settings.
+* Start the VM, Search Msconfig at start and run the system configuration.
+* In System Configuration,Select Boot option in that select Adavanced options.
+* In advanced option enable the debug checkbox,in global debug settings enable debug port to COM1 and Baud rate to 115200.
+
+![Windbg-Intro](image/img99.PNG)
+
+**Connect WinDbg** <!-- style="font-size:25px" -->
+
+On your host machine, start WinDbg and select 'Kernel Debug'. In the COM tab, enter the pipe name in the 'Pipe' field and check the 'Reconnect' box. The settings should look something like:
+
+```markdown
+Baud Rate: 115200
+Resets: 0
+Pipe: \.\pipe\mypipe
+Reconnect
+```
+
+![Windbg-Intro](image/img100.PNG)
+
+### **WindowsLogonUI Demo**
+
+```text
+Kernel Debugger
+    Attach the remote machine
+
+    > Break manually
+
+    > !process 0 0 logonui.exe
+        this command gives me process address or process pointer.
+        why 0 0, the reason is because we need only minimal information.
+        logonui.exe executable name.
+
+    > .process /r /p process_address
+        process_address from the above command.
+        /r /p,to reload the user mode symbols.
+
+    > !peb
+        peb will give you which process you are in.
+
+    > lm 
+        even this command give which process we are in.
+
+    > s -u 0 L?7fffffff "unique_string"
+        u is for unicode
+        0 this is the start of the user mode address
+        L?7fffffff entire user mode range.
+        unique_string should be 8 characters
+
+    > ba r4 address
+        breakpoint on access.
+```
+
 # Debugging Managed Code .NET
 
 Debugging managed code in the .NET Framework involves using tools and features designed specifically for the .NET runtime. 
@@ -3109,6 +3236,160 @@ Open Crash Dump
 
 * The !do command in WinDbg stands for "DumpObject". It's part of the SOS debugging extension, which is used for debugging managed code in .NET applications.
 * When you run !do followed by an address, it dumps a representation of a managed object at that memory address. The output includes the object's type, size, and value for each field in the object.
+
+# Best Practices and Tools
+
+* [**Debugging best practices and strategies**](#debugging-best-practices-and-strategies)
+* [**Using additional debugging tools and extensions**](#using-additional-debugging-tools-and-extensions)
+* [**Integrating debugging into the development workflow**](#integrating-debugging-into-the-development-workflow)
+
+## **Debugging best practices and strategies**
+
+Debugging with WinDbg can be a powerful and valuable skill, especially for more complex or low-level debugging scenarios. Here are some best practices and strategies for effective debugging using WinDbg:
+
+1. **Understand the Basics:** Familiarize yourself with basic commands, syntax, and concepts of WinDbg, such as breakpoints, registers, memory, call stacks, and modules.
+
+2. **Symbol Files:** Make sure you have the correct symbol files (PDBs) for the version of the executable you're debugging. Symbol files provide information about code and variables, enabling meaningful debugging.
+
+3. **Start with !analyze -v:** When an application crashes, start with the `!analyze -v` command to get an automated analysis of the crash dump. It can provide insights into the root cause.
+
+4. **Breakpoints:** Use breakpoints (`bp` command) to pause execution at specific locations in your code and analyze the program's state.
+
+5. **Memory Inspection:** Use commands like `!dps`, `!dqs`, and `!db` to inspect memory content, including pointers, structures, and bytes.
+
+6. **Call Stacks:** Analyze call stacks using the `k` command to understand the sequence of function calls leading to the current point.
+
+7. **Modules and Symbols:** Use `lm` to list loaded modules, and `x` to examine symbols, memory, and addresses.
+
+8. **Dump Files:** Analyze crash dump files generated by applications that encounter errors. Load the dump file in WinDbg to inspect the state of the application at the time of the crash.
+
+9. **Event Log:** Monitor events and logs using `!logexts.logi` to get insights into system events and messages.
+
+10. **Version and Platform Compatibility:** Ensure that you're using the right version of WinDbg for the target platform (32-bit vs. 64-bit) and the version of Windows you're debugging.
+
+11. **Extension Commands:** WinDbg has a rich ecosystem of extension commands. Learn to use extensions like Psscor4 (for .NET) or other platform-specific extensions.
+
+12. **Scripting:** Learn scripting with WinDbg's scripting language to automate repetitive tasks or perform complex analyses.
+
+13. **!grep:** Use the `!grep` extension to search for patterns in memory or output, making it easier to locate relevant information.
+
+14. **Break-in Commands:** If an application is stuck or not responding, use `Ctrl+C` to break in and execute commands to diagnose the issue.
+
+15. **Windbg Preview:** Consider using the modern WinDbg Preview version, which provides a more user-friendly interface and additional features.
+
+16. **Practice and Resources:** Practice regularly and consult resources like documentation, tutorials, blogs, and forums to enhance your WinDbg skills.
+
+17. **Be Patient and Systematic:** Debugging with WinDbg can be challenging and require patience. Approach debugging systematically, one step at a time.
+
+Remember that WinDbg is a powerful tool with a steep learning curve. Regular practice and exposure to real-world debugging scenarios will help you become more proficient over time.
+
+## **Using additional debugging tools and extensions**
+
+Using additional debugging tools and extensions in WinDbg can greatly enhance your debugging capabilities, especially in complex scenarios. Here are some useful extensions and tools you can incorporate into your WinDbg workflow:
+
+1. **Psscor4 (PSSCOR2/PSSCOR4 for .NET):** Psscor extensions are designed for debugging managed .NET applications. They provide advanced features for analyzing managed memory, threads, and objects.
+
+2. **SOS (Son of Strike):** SOS is another .NET debugging extension that ships with the .NET Framework. It's commonly used to analyze managed memory, threads, and exceptions.
+
+3. **MEX (Managed Extensions for WinDbg):** MEX provides additional commands for debugging managed code, offering features beyond the built-in WinDbg commands.
+
+4. **Wintellect's CLRMD:** CLR Memory Diagnostics (CLRMD) is a set of APIs and libraries that allow programmatic access to the memory and threads of a .NET application. It's particularly useful for automating debugging tasks.
+
+5. **WinDbg Preview Extensions:** The modern WinDbg Preview has a range of built-in extensions that provide user-friendly interfaces for various tasks, such as memory analysis, debugging, and more.
+
+6. **SOSEX:** SOSEX is an extension for managed .NET debugging that provides additional commands for thread analysis, heap inspection, and more.
+
+7. **DebugDiag:** DebugDiag is a tool that helps capture and analyze crash dumps in Windows applications. It's particularly useful for post-mortem analysis.
+
+8. **Pykd:** Pykd is a Python extension for WinDbg that allows you to write debugging scripts and automate tasks using Python.
+
+9. **PerfView:** PerfView is a performance analysis tool that helps you diagnose CPU and memory-related performance issues. While not an extension, it's a powerful companion tool for deep performance analysis.
+
+10. **Windbg Extensions Directory:** The WinDbg community has created various extensions that can be downloaded and used. You can find these extensions in the Windbg Extension Directory.
+
+11. **SOSEx (SOS Extensions):** SOSEx is a collection of .NET debugging extensions that extends the capabilities of SOS. It provides additional commands for memory analysis and managed code debugging.
+
+12. **WinDbg Bridge for Visual Studio:** You can connect WinDbg to Visual Studio using the "WinDbg Bridge" feature. This allows you to use Visual Studio's debugging interface while leveraging WinDbg's power.
+
+13. **WinDbg Scripts:** Create your own custom scripts using WinDbg scripting language or Python to automate repetitive debugging tasks and analyses.
+
+To use these extensions and tools, you generally need to load them into WinDbg using the `.load` command. For example:
+
+```text
+.load psscor4
+.load sosex
+```
+
+Always ensure that you're using the appropriate version of the extension that matches the version of WinDbg you're using. Extensions can significantly extend WinDbg's capabilities, so it's worth exploring those that align with your debugging needs.
+
+## **Integrating debugging into the development workflow**
+
+Integrating debugging into your development workflow with WinDbg can help you identify and resolve issues more efficiently. Here's how you can seamlessly incorporate WinDbg debugging into your development process:
+
+1. **Setup and Environment:**
+   
+    * Install the appropriate version of WinDbg (or WinDbg Preview) for your target platform (32-bit/64-bit).
+    * Configure symbol paths to ensure you have access to relevant symbol files (PDBs).
+    * Install any necessary extensions you plan to use (e.g., Psscor4, SOS, SOSEX).
+
+2. **Source Control:**
+
+    * Use version control systems to manage your codebase. Ensure that symbol files (PDBs) are generated and stored with your builds.
+
+3. **Debugging Strategies:**
+
+   * Define clear strategies for debugging common issues, such as crashes, performance bottlenecks, memory leaks, etc.
+
+4. **Debugging Triggers:**
+
+   * Integrate automatic crash dump collection for production applications. Tools like DebugDiag can help with this.
+   * Utilize assertions or logging to capture relevant information during development or testing phases.
+
+5. **Development Environment:**
+
+    * Set up your development environment with easy access to WinDbg. Consider adding it to your tools menu or using shortcuts.
+
+6. **Debugging Tasks:**
+
+    * When an issue is encountered, initiate debugging immediately by launching WinDbg and loading the appropriate dump file.
+
+7. **Symbol Resolution:**
+    
+    * Ensure symbol paths are configured to fetch symbols from your organization's symbol server or other relevant sources.
+
+8. **Automated Scripts:**
+   
+   * Develop scripts for common debugging tasks or analyses. These scripts can automate repetitive steps and save time.
+
+9. **Collaborative Debugging:**
+   
+   * Share knowledge and best practices for debugging among your team members to foster collaboration.
+
+10. **WinDbg Scripting:**
+   
+   * Learn and use WinDbg scripting language or Python scripting to automate complex analyses.
+
+11. **Integration with IDEs:**
+   
+    * If you're using Visual Studio, leverage the WinDbg Bridge feature to switch seamlessly between Visual Studio's debugging and WinDbg's powerful analysis capabilities.
+
+12. **Documentation:**
+   
+   * Create documentation or knowledge base articles on how to set up WinDbg for debugging and common debugging scenarios.
+
+13. **Continuous Learning:**
+   
+   * Keep refining your debugging skills by regularly practicing and learning about advanced WinDbg features and techniques.
+
+14. **Post-Mortem Analysis:**
+   
+   * Use crash dumps or logs to analyze issues that occur in production environments after the fact.
+
+15. **Debugging Training:**
+   
+   * Provide training sessions or resources for your development team to enhance their debugging skills with WinDbg.
+
+By making WinDbg a part of your regular development workflow, you can identify and address issues more effectively and gain deeper insights into your codebase. As you become more proficient with WinDbg, you'll find it an invaluable tool for ensuring the quality and reliability of your applications.
 
 # Summary 
 
