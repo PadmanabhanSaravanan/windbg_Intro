@@ -2120,6 +2120,8 @@ WinDbg, you can control how the debugger handles exceptions by event filter tool
 |     sxn       |     Output(Notify)                   |     When this exception occurs, the target application does not break into the debugger at all.However, a message is displayed that notifies theuser of this exception.                                                                                                                 |
 |     [sxi](#sxi)      |     Ignore                           |     When this exception occurs. the   target application does not break into the debugger at all, and no message is   displayed                                                                                                                                                         |
 
+![Windbg-Intro](image/img83.png)
+
 **Example:**
 
 In helloworld program make cahnges that the program causes exception integer-divide by zero
@@ -3166,9 +3168,43 @@ It is a tool created by Mark Russinovich, a part of the Sysinternals suite provi
 
 **5. Reboot:** For the changes to take effect, you might need to restart your computer.
 
-## **HighIRQLFault Dump Analysis**
+### **HighIRQLFault Dump Analysis**
 
+```text
+Open Crash Dump
+    open MEMORY.DMP
+    we can see "Kernel Bitmap Dump File: Kernel address space is available",
+    while loading the dump it means that it is full kernel address space dump.
 
+    > !analyze -v
+        - to see what are the details
+        - we should see NotMyFault on the call stack, because NotMyFault was the reason for the crash.
+
+    > k
+        - call stack
+        - any address which starts from 8 and above is kernel mode address.
+
+    > .trap 0xffffcc8a742df7e0
+        - this command is similar to view registers.
+        - to set the current register context to what it was when the trap (or exception) at the memory address 
+        0xffffcc8a742df7e0 occurred.
+        - we can see that in instruction it is trying to access the non accessiable memory so it is an exception
+        and that is reason for the system crash.
+
+    > !process 0 0 
+        - this will give all process in the dump
+        - we can switch into different process by taking any random process address.
+
+    > .process /r /p  process_address
+        /r /p to reload the symbols
+        switch into the process this command is used
+
+    > lm
+        to check whether into the current process.
+
+    > !thread
+        this command gives you the current thread.
+```
 
 ## **10.WindowsLogonUI**
 
