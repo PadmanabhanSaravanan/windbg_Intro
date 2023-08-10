@@ -2290,6 +2290,60 @@ Reconnect
 
 ![Windbg-Intro](image/img100.PNG)
 
+# Modes in Debugging
+
+* [**User Mode**](#user-mode)
+* [**Kernel Mode**](#kernel-mode)
+
+## **User Mode**
+
+**1. Definition:** <!-- style="font-size:20px" -->
+
+**User Mode:** Processes that run in user mode are isolated from each other and the kernel, ensuring that if a user-mode process fails, it doesn't affect other processes or the system's core. Most application software runs in user mode.
+
+**2. Debugging in User Mode with WinDbg:** <!-- style="font-size:20px" -->
+
+* **Attaching to a Process:** You can attach WinDbg to a running process in user mode and inspect its state, call stack, threads, and other attributes.
+* **Analyzing Crash Dumps:** When an application crashes, it can generate a user mode dump, which can then be loaded into WinDbg for post-mortem analysis.
+* **Breakpoints:** You can set breakpoints in the user-mode application's code to inspect variable values, call stacks, and other states.
+
+**3. WinDbg Commands:** <!-- style="font-size:20px" -->
+
+* Commands like ~, k, r, .reload, lm, bp, g, and others can be used in user mode debugging.
+* Commands specific to user mode often revolve around threads, modules, stacks, and process environments.
+
+**4. Limitations:** <!-- style="font-size:20px" -->
+
+* A user-mode debugger can't inspect the kernel or other processes not being directly debugged.
+* Privileges: Certain operations in user mode require elevated privileges, depending on the process being debugged and the actions being performed.
+
+**5. User Mode Crash Dumps:** <!-- style="font-size:20px" -->
+
+* User mode crash dumps capture the state of a process at a particular point in time. They can be full dumps (capturing the entire process memory) or mini dumps (capturing a subset).
+
+## **Kernel Mode**
+
+**1. Definition:** <!-- style="font-size:20px" -->
+
+**Kernel Mode:** In kernel mode, the executing code has complete and unrestricted access to the underlying hardware. This includes access to system memory, CPU, and other hardware components. It can execute any CPU instruction and reference any memory address.
+
+**2. Debugging in Kernel Mode with WinDbg:** <!-- style="font-size:20px" -->
+
+* **Setting Up:** Kernel debugging often requires two machines: a "target" (the machine being debugged) and a "host" (the machine running the debugger, WinDbg in this case).
+* **Breakpoints:** You can set breakpoints in the kernel or driver code. Once hit, the system will be paused, allowing for inspection.
+* **Inspecting State:** You can view and modify kernel data structures, call stacks, and more.
+
+**3. WinDbg Commands for Kernel Mode:** <!-- style="font-size:20px" -->
+
+* Commands such as !process, !thread, !pool, !irp, !devstack, and more can be used in kernel mode debugging. These commands are designed to inspect kernel-specific structures and states.
+* Drivers and system modules can be loaded, unloaded, and inspected.
+
+**4. Considerations:** <!-- style="font-size:20px" -->
+
+* **BSOD (Blue Screen of Death):** Errors in kernel mode often lead to system crashes, known colloquially as the "Blue Screen of Death" in Windows. These crashes produce memory dumps that can be analyzed post-mortem with WinDbg.
+* **Privileges:** Code running in kernel mode can potentially bypass security checks, which means errors can have serious consequences.
+* **Performance:** Since kernel mode operations are generally faster than user mode operations (due to fewer context switches and system calls), some critical operations might run in kernel mode to boost performance
+
 # Use Cases
 
 * [**01.Simple Crash**](#01.simple-crash)
@@ -3059,9 +3113,64 @@ Open the Executable
 
 # Kernel Mode Use Cases
 
-* [**09.WindowsLogonUI**](#09.windowslogonui)
+* [**09.HighIRQLFault**](#09.highirqlfault)
+* [**10.WindowsLogonUI**](#09.windowslogonui)
 
-## **09.WindowsLogonUI**
+## **09.HighIRQLFault**
+
+* In Windows operating systems, an IRQL (Interrupt Request Level) represents the priority of an interrupt or a thread. The IRQL system is used to determine the order in which threads and interrupt requests are serviced by the processor. The higher the IRQL, the higher the priority.
+
+* A "High IRQL Fault" typically refers to a situation where code attempts to access pageable memory or perform illegal actions at a high IRQL. Since operations at higher IRQLs prevent lower IRQL tasks from being serviced, including page fault handling, certain operations are restricted.
+
+* For this Example we will use NotMyFault.exe application to cause issue
+
+**"Not My Fault"** <!-- style="font-size:25px" -->
+
+It is a tool created by Mark Russinovich, a part of the Sysinternals suite provided by Microsoft. This tool is designed for Windows systems to intentionally crash, hang, or generate CPU and memory loads. It provides a user interface and a command-line interface for performing a variety of crash scenarios.
+
+[click here](https://learn.microsoft.com/en-us/sysinternals/downloads/notmyfault) to download.
+
+* Download the application in VM.
+* Run the notmyfault.exe file and select HighIRQL Fault(Kernel) and click crash.
+
+![image windbg](image/img108.PNG)
+
+* The System will crash and collects the dump of entire kernel mode.
+* Take the dump and start analysis.
+
+**To Collect Entire Kernel Mode Dump** <!-- style="font-size:25px" -->
+
+**1. Open System Properties:**
+
+* Right-click on This PC or Computer on the desktop, and select Properties.
+* Click on Advanced system settings on the left sidebar.
+
+![image windbg](image/img109.PNG)
+
+**2. Startup and Recovery Settings:**
+
+* Under the Advanced tab, in the Startup and Recovery section, click Settings....
+
+![image windbg](image/img110.PNG)
+
+**3. Configuring the Dump:**
+
+* In the System failure section, ensure that Write an event to the system log and Automatically restart are checked.
+* In the Write debugging information dropdown menu, select Complete memory dump.
+* Note: If you don't see the Complete memory dump option, it could be because your page file is not configured to be on the system drive or is too small. The page file on the system drive must be large enough to hold all of the physical RAM plus 1MB.
+* Set the Dump file path. By default, it's %SystemRoot%\MEMORY.DMP, which usually translates to C:\Windows\MEMORY.DMP.
+
+![image windbg](image/img111.PNG)
+
+**4. OK and Apply:** Click OK on the Startup and Recovery window, and then on the System Properties window.
+
+**5. Reboot:** For the changes to take effect, you might need to restart your computer.
+
+## **HighIRQLFault Dump Analysis**
+
+
+
+## **10.WindowsLogonUI**
 
 In this demo what we're going to do is, we're going to print the password of Windows logon into the kernel debugger, so whenever someone types the password on the desktop to log on,that password will get displayed to the attached kernel debugger.
 
