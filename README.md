@@ -1841,8 +1841,6 @@ Launch Executable:
 
 ## **Analyzing thread information**
 
-[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/Threads)
-
 **~ (Tilde) Command:**
 
 The tilde command lists all the threads in the target process, along with their thread IDs (TIDs) and processor (CPU) affinity.
@@ -2305,8 +2303,6 @@ Reconnect
 
 ## **01.Simple Crash**
 
-[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/01.SimpleCrash)
-
 When a simple crash occurs, the operating system typically stops the program and generates an error report, which may include a core dump or a minidump. This report can be analyzed with a debugger to understand the state of the program at the time of the crash and hopefully determine what caused it.
 
 * [**Generate an error report**](#generate-an-error-report)
@@ -2380,19 +2376,9 @@ Open Crash Dump:
 
 ## **02.AccessViolation**
 
-[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/02.AccessViolation)
-
 An Access Violation, also known as a segmentation fault, is a specific kind of error that occurs when a program tries to access a memory location that it's not allowed to access, or tries to perform an operation (like write) that it's not allowed to perform on a particular memory location.
 
 ![Windbg-Intro](image/img94.png)
-
-**How to enable release mode array bound checks:** <!-- style="font-size:25px" -->
-
-In Microsoft Visual Studio, the "/RTC1" option, which includes array bounds checking, is used in debug mode and not in release mode. By default, array bounds checks are disabled in release mode to improve performance.
-
-If you want to enable array bounds checks specifically for release mode, you can use the _ASSERTE macro, which performs array bounds checks regardless of the build mode. _ASSERTE is used to perform runtime checks in your code, and it can help you catch array bounds errors during testing and development. However, please keep in mind that this may not be as efficient as the optimizations done by the compiler in debug mode.
-Here's how you can use _ASSERTE:
-#include <assert.h>
 
 ```c
 int main() {
@@ -2406,45 +2392,6 @@ int main() {
     return 0;
 }
 ```
-
-**Here are some strategies to help you debug the release version of your code in Windbg:**
-
-1.	Generate Symbol Files: Make sure you have generated symbol (.pdb) files for your release build. Symbol files contain information about the source code and the binary, which helps in debugging. When compiling your release build, enable the generation of symbol files and keep them alongside your binary executable.
-
-2.	Load Symbols in Windbg: Before analyzing the release version in Windbg, load the symbol files using the .symfix and .reload commands. The .symfix command sets the symbol path, and .reload reloads the symbols for the release version.
-
-3.	Enable Debugging Information: If possible, consider building your release version with debugging information enabled (/Zi for MSVC or -g for GCC). This will include additional debugging information in the binary, making it easier to understand the call stack and variable values during debugging.
-
-4.	Use Source Code and Disassembly: Use the u (unassemble) command in Windbg to disassemble the code at specific addresses. Compare the disassembled code with the corresponding source code to understand the execution flow better. You can also use the u command with symbols to view disassembly with source lines interleaved.
-
-5.	Set Breakpoints and Trace Execution: Set breakpoints at critical points in your code using the bp command. You can trace the execution of the program by using the g (go) command to continue execution until a breakpoint is hit. Use the p command to step through the code one instruction at a time.
-
-6.	Inspect Memory: Use the d, dd, dq, or du commands to inspect memory and variables at various points during program execution. This can help you understand the values of variables and detect potential issues.
-
-7.	Analyze Crash Dumps: If your release version crashes and generates a dump file, you can load the dump file in Windbg and analyze the call stack, registers, and memory to pinpoint the cause of the crash.
-
-Remember that debugging optimized release code can be more challenging due to various compiler optimizations, inlining, and code reordering. It may require a deeper understanding of the assembly-level code and the specific optimizations applied during compilation. Additionally, keep backups of the original release build and symbol files to ensure you can return to the unmodified code if needed.
-
-**How can I generate symbol files in msvc** <!-- style="font-size:25px" -->
-
-To generate symbol files (also known as PDB files) for a release build in Microsoft Visual Studio (MSVC), you need to ensure that your release build configuration includes the necessary settings to generate debug information. Debug information is what gets stored in the symbol files and is essential for effective debugging. Here's how you can generate symbol files for a release build in MSVC:
-
-1.	Open Project Properties: Open your project in Visual Studio, and from the "Solution Explorer," right-click on your project and select "Properties."
-
-2.	Select Release Configuration: In the project properties window, make sure you have selected the "Release" configuration from the top drop-down menu. This is the configuration for which you want to generate the symbol files.
-
-3.	Enable Debug Information: In the project properties window, go to "Configuration Properties" > "C/C++" > "General." Set the "Debug Information Format" option to "Program Database (/Zi)." This option tells the compiler to generate debug information in a PDB file.
-
-4.	Set Output Path for PDB Files: In the same project properties window, go to "Configuration Properties" > "Linker" > "Debugging." Set the "Generate Debug Info" option to "Yes (/DEBUG)." Also, specify the output directory for the generated PDB files using the "Program Database File Name" option.
-
-5.	Disable Optimizations (Optional): For better debugging experience, you may want to disable certain optimizations that can make debugging more challenging. In the project properties window, go to "Configuration Properties" > "C/C++" > "Optimization," and set the "Optimization" option to "Disabled (/Od)."
-
-6.	Build the Project: After configuring the project properties, build your project in the "Release" configuration. The PDB files will be generated in the specified output directory.
-
-7.	After building the release build with the above settings, you will have the necessary symbol files (PDB files) alongside your release executable. These PDB files contain debug information, which is essential for debugging the release build effectively.
-
-Please keep in mind that including debug information in a release build will increase the size of the binary and may affect performance. Therefore, it is essential to securely manage the generated PDB files and avoid distributing them with your release package. Keep the PDB files safe in a controlled and secure environment and use them for debugging purposes only when necessary.
-
 
 ### **AccessViolation demo1**
 
@@ -2489,6 +2436,54 @@ Open executable
 
     > qd
 ```
+
+**Solution**
+
+**How to enable release mode array bound checks:** <!-- style="font-size:25px" -->
+
+In Microsoft Visual Studio, the "/RTC1" option, which includes array bounds checking, is used in debug mode and not in release mode. By default, array bounds checks are disabled in release mode to improve performance.
+
+If you want to enable array bounds checks specifically for release mode, you can use the _ASSERTE macro, which performs array bounds checks regardless of the build mode. _ASSERTE is used to perform runtime checks in your code, and it can help you catch array bounds errors during testing and development. However, please keep in mind that this may not be as efficient as the optimizations done by the compiler in debug mode.
+Here's how you can use _ASSERTE:
+#include <assert.h>
+
+**Here are some strategies to help you debug the release version of your code in Windbg:**
+
+1.	Generate Symbol Files: Make sure you have generated symbol (.pdb) files for your release build. Symbol files contain information about the source code and the binary, which helps in debugging. When compiling your release build, enable the generation of symbol files and keep them alongside your binary executable.
+
+2.	Load Symbols in Windbg: Before analyzing the release version in Windbg, load the symbol files using the .symfix and .reload commands. The .symfix command sets the symbol path, and .reload reloads the symbols for the release version.
+
+3.	Enable Debugging Information: If possible, consider building your release version with debugging information enabled (/Zi for MSVC or -g for GCC). This will include additional debugging information in the binary, making it easier to understand the call stack and variable values during debugging.
+
+4.	Use Source Code and Disassembly: Use the u (unassemble) command in Windbg to disassemble the code at specific addresses. Compare the disassembled code with the corresponding source code to understand the execution flow better. You can also use the u command with symbols to view disassembly with source lines interleaved.
+
+5.	Set Breakpoints and Trace Execution: Set breakpoints at critical points in your code using the bp command. You can trace the execution of the program by using the g (go) command to continue execution until a breakpoint is hit. Use the p command to step through the code one instruction at a time.
+
+6.	Inspect Memory: Use the d, dd, dq, or du commands to inspect memory and variables at various points during program execution. This can help you understand the values of variables and detect potential issues.
+
+7.	Analyze Crash Dumps: If your release version crashes and generates a dump file, you can load the dump file in Windbg and analyze the call stack, registers, and memory to pinpoint the cause of the crash.
+
+Remember that debugging optimized release code can be more challenging due to various compiler optimizations, inlining, and code reordering. It may require a deeper understanding of the assembly-level code and the specific optimizations applied during compilation. Additionally, keep backups of the original release build and symbol files to ensure you can return to the unmodified code if needed.
+
+**How can I generate symbol files in msvc** <!-- style="font-size:25px" -->
+
+To generate symbol files (also known as PDB files) for a release build in Microsoft Visual Studio (MSVC), you need to ensure that your release build configuration includes the necessary settings to generate debug information. Debug information is what gets stored in the symbol files and is essential for effective debugging. Here's how you can generate symbol files for a release build in MSVC:
+
+1.	Open Project Properties: Open your project in Visual Studio, and from the "Solution Explorer," right-click on your project and select "Properties."
+
+2.	Select Release Configuration: In the project properties window, make sure you have selected the "Release" configuration from the top drop-down menu. This is the configuration for which you want to generate the symbol files.
+
+3.	Enable Debug Information: In the project properties window, go to "Configuration Properties" > "C/C++" > "General." Set the "Debug Information Format" option to "Program Database (/Zi)." This option tells the compiler to generate debug information in a PDB file.
+
+4.	Set Output Path for PDB Files: In the same project properties window, go to "Configuration Properties" > "Linker" > "Debugging." Set the "Generate Debug Info" option to "Yes (/DEBUG)." Also, specify the output directory for the generated PDB files using the "Program Database File Name" option.
+
+5.	Disable Optimizations (Optional): For better debugging experience, you may want to disable certain optimizations that can make debugging more challenging. In the project properties window, go to "Configuration Properties" > "C/C++" > "Optimization," and set the "Optimization" option to "Disabled (/Od)."
+
+6.	Build the Project: After configuring the project properties, build your project in the "Release" configuration. The PDB files will be generated in the specified output directory.
+
+7.	After building the release build with the above settings, you will have the necessary symbol files (PDB files) alongside your release executable. These PDB files contain debug information, which is essential for debugging the release build effectively.
+
+Please keep in mind that including debug information in a release build will increase the size of the binary and may affect performance. Therefore, it is essential to securely manage the generated PDB files and avoid distributing them with your release package. Keep the PDB files safe in a controlled and secure environment and use them for debugging purposes only when necessary.
 
 ### **AccessViolation demo2**
 
@@ -2557,8 +2552,6 @@ Open executable
 
 ## **03.StackOverflow**
 
-[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/03.StackOverflow)
-
 Stack overflow occurs when a program's call stack exceeds its maximum size limit. The call stack is a special region of computer's memory that stores information about the active subroutines or functions in a program. This information typically includes return addresses, passed parameters, and local variables.
 
 When a function is called, a new stack frame is pushed onto the call stack. The stack frame contains the return address, the function's parameters, and space for its local variables. When the function returns, its stack frame is popped from the call stack. If a program calls functions in a way that the call stack grows beyond its maximum limit, this results in a stack overflow.
@@ -2608,7 +2601,6 @@ Open Executable
 
 ## **04.Bad Exception Handler**
 
-[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/04.BadExceptionHandler)
 
 A bad exception handler is one that does not properly manage exceptions when they occur. Exception handling is used to respond to the occurrence of exceptions, which are anomalies that occur during the execution of a program.
 
@@ -2694,8 +2686,6 @@ An application "hangs" when it becomes unresponsive to user input. There are var
 * Heavy Processing
 * External Resource Usage
 * UI Thread Blocking
-
-[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/05.NormalHang)
 
 ```python
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -2802,8 +2792,6 @@ The windows will generate messages to the message pump and that messages has to 
 
 A deadlock is a specific condition where two or more tasks are unable to progress because each is waiting for the other to release a resource. Deadlocks can occur in many different contexts, including multiprocessing, multithreading, and distributed systems.
 
-[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/06.DeadLock)
-
 Example: 
 
 * Process 1 holds Resource 1 and requests Resource 2.
@@ -2898,8 +2886,6 @@ Open Executable
 ## **07.Mutex**
 
 Mutual Exclusion (mutex) is a program object that prevents multiple threads from accessing the same shared resource simultaneously. A shared resource in this context is a code element with a critical section, the part of the code that should not be executed by more than one thread at a time.
-
-[click the link for reference program](https://github.com/PadmanabhanSaravanan/windbg_Intro/tree/master/07.Mutex)
 
 * In the given example, two threads are created and each attempts to write to a hypothetical database. The access to the database is controlled by a mutex, ghMutex. This mechanism ensures that only one thread at a time can write to the database.
 * However, in the WriteToDatabase function, there is a Sleep(30000) function call that causes the current thread to sleep for 30000 milliseconds (or 30 seconds) while holding the mutex. This is problematic because the other thread will be blocked for this duration, waiting for the mutex to be released and this application slow and we will see how it will look windbg.
