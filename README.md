@@ -2634,7 +2634,7 @@ int main()
 
 The program creates a null pointer ptr and attempts to dereference(To access the value or object located in a memory location stored in a pointer or another value interpreted as such) it to assign the value 100. This results in a memory access violation because it's trying to write to memory location 0, which is not allowed.
 
-For this case dump will not be genertad by WER.we have to procdump to collect dump [click here to download procdump](https://learn.microsoft.com/en-us/sysinternals/downloads/procdump)
+For this case dump will not be genertad by WER.we have to use procdump to collect dump [click here to download procdump](https://learn.microsoft.com/en-us/sysinternals/downloads/procdump)
 
 **Setting up Procdump**
 
