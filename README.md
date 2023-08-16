@@ -2634,6 +2634,27 @@ int main()
 
 The program creates a null pointer ptr and attempts to dereference(To access the value or object located in a memory location stored in a pointer or another value interpreted as such) it to assign the value 100. This results in a memory access violation because it's trying to write to memory location 0, which is not allowed.
 
+For this case dump will not be genertad by WER.we have to procdump to collect dump [click here to download procdump](https://learn.microsoft.com/en-us/sysinternals/downloads/procdump)
+
+**Setting up Procdump**
+
+* Open a command prompt with administrative privileges.
+* Navigate to the directory where you extracted procdump.
+* Use the following command to write a dump
+
+```text
+<filepath>\procdump.exe -ma -t -w Executable_Name.exe
+```
+
+* -ma: Write a full dump, including all process memory.
+* -w: Wait for the specified process to launch if it's not running.
+* -t: Write a dump when the process terminates.
+
+**Run your program**
+
+* Execute your program.
+* Let it crash. When it does, procdump will detect the crash and generate a dump file in the directory from where you ran procdump.
+
 ```text
 Open Executable
     open badexceptionhandler executable.
